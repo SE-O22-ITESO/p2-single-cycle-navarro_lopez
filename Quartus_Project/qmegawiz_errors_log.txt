@@ -1,0 +1,6 @@
+
+
+C:/Users/arnavarr/Quartus/P2023_MDE2545A/RISC_V_Multi_Cycle/Quartus_Project/IP_Catalog/PLL_Intel_FPGA/PLL_Intel_FPGA.v
+
+Mar 10 08PM:43:20>: Megafunction PLL Intel FPGA IP v21.1 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted

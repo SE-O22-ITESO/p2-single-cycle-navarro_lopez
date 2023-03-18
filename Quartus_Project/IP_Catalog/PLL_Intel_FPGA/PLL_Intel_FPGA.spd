@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simPackage>
+ <file path="PLL_Intel_FPGA_sim/PLL_Intel_FPGA.vo" type="VERILOG" />
+ <topLevel name="PLL_Intel_FPGA" />
+ <deviceFamily name="cyclonev" />
+</simPackage>
