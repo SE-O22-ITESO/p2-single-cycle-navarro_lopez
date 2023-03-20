@@ -43,7 +43,7 @@ initial begin
 	UART_Rx = 1'b0;
 	rst		= 1'b1; #1;
 	rst		= 1'b0;
-	GPIO_In = 10'd2;
+	GPIO_In = 10'h2AA;
 end
 
 always begin

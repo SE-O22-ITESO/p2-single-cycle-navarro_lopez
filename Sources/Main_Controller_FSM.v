@@ -30,24 +30,25 @@ module Main_Controller_FSM(
 	input	rst
 );
 // ====================================================
-// = Machine states         
+// = Machine state         
 // ====================================================
-
-localparam INS_FETCH		= 4'd00;
-localparam INS_DECODE	= 4'd01;
-localparam REG_EXEC		= 4'd02;
-localparam IMM_EXEC		= 4'd03;
-localparam BRN_COMP		= 4'd04;
-localparam AUI_EXEC		= 4'd05;
-localparam LUI_EXEC		= 4'd06;
-localparam GNR_WRTBCK	= 4'd07;
-localparam MEM_ADDR		= 4'd08;
-localparam MEM_LOAD		= 4'd09;
-localparam MEM_STORE		= 4'd10;
-localparam MEM_WRTBCK	= 4'd11;
-localparam BRN_REACH		= 4'd12;
-localparam BRN_REJCT		= 4'd13;
-localparam CPU_HALT		= 4'd15;
+localparam INS_FETCH		= 5'd00;
+localparam INS_DECODE	= 5'd01;
+localparam REG_EXEC		= 5'd02;
+localparam IMM_EXEC		= 5'd03;
+localparam JAL_EXEC		= 5'd04;
+localparam BRN_COMP		= 5'd05;
+localparam AUI_EXEC		= 5'd06;
+localparam LUI_EXEC		= 5'd07;
+localparam JAL_WRTBCK	= 5'd08;
+localparam GNR_WRTBCK	= 5'd09;
+localparam MEM_ADDR		= 5'd10;
+localparam MEM_LOAD		= 5'd11;
+localparam MEM_STORE		= 5'd12;
+localparam MEM_WRTBCK	= 5'd13;
+localparam BRN_REACH		= 5'd14;
+localparam BRN_REJCT		= 5'd15;
+localparam CPU_HALT		= 5'd16;
 
 localparam OPCODE_R_TYPE_LA	= 7'b0110011;	// R-Type Logic Arithmetic
 localparam OPCODE_I_TYPE_LA	= 7'b0010011;	// I-Type Logic Arithmetic
@@ -71,7 +72,7 @@ localparam CMP_NA		= 2'd3;	// Comp:
 // = State Machine         
 // ====================================================
 // State register
-reg [3:0] state;
+reg [4:0] state;
 
 //Next state logic & Present state FF's
 always @(posedge rst, posedge clk) begin
@@ -94,12 +95,12 @@ always @(posedge rst, posedge clk) begin
 //					OPCODE_R_TYPE_LA: state <= REG_EXEC;	// => Register Execute
 					OPCODE_I_TYPE_LA: state <= IMM_EXEC;	// => Immediate execute
 					OPCODE_I_TYPE_LW: state <= MEM_ADDR;	// => Memory address calc
-					//OPCODE_I_TYPE_JR: state <= GNR_WRTBCK; // => Direct to Writeback
+//					OPCODE_I_TYPE_JR: state <= GNR_WRTBCK; // => Direct to Writeback
 					OPCODE_S_TYPE_SW: state <= MEM_ADDR;	// => Memory address calc
 					OPCODE_B_TYPE_BR: state <= BRN_COMP;	// => Branch completion
-					OPCODE_U_TYPE_LU: state <= LUI_EXEC;		// Load up imm exe
+					OPCODE_U_TYPE_LU: state <= LUI_EXEC;	// => Load up imm exe
 					OPCODE_U_TYPE_AU: state <= AUI_EXEC;	// => Add up imm to pc exe
-					//OPCODE_J_TYPE_JL: state <= 				//
+					OPCODE_J_TYPE_JL: state <= JAL_WRTBCK;	// => 
 					default: state <= CPU_HALT;
 				endcase
 				
@@ -131,6 +132,10 @@ always @(posedge rst, posedge clk) begin
 			AUI_EXEC: begin
 				state <= GNR_WRTBCK;	// => General writeback
 				end
+				
+			JAL_EXEC: begin
+				state <= INS_FETCH; // => Instruction fetch
+				end
 			// ===== Memory Address Calculation =========================
 			MEM_ADDR: begin
 				case(Opcode)
@@ -153,10 +158,15 @@ always @(posedge rst, posedge clk) begin
 			MEM_WRTBCK: begin
 				state <= INS_FETCH;	// => Instruction fetch
 				end
+					
 			
-			// ===== General Writeback ==================================
+			// ===== Register File Writeback ============================
 			GNR_WRTBCK: begin
 				state <= INS_FETCH;	// => Instruction fetch
+				end
+			
+			JAL_WRTBCK: begin
+				state <= JAL_EXEC;	// => Execute
 				end
 			
 			// ===== Branch completion ==================================
@@ -300,6 +310,21 @@ always @(state) begin
 			ALUSrcB			= 2'b10; // B = ImmExt
 			//RegWrite			= 1'b0;
 			end
+			
+		JAL_EXEC: begin
+			PCWrite			= 1'b1;	//Set PCWrite
+			//AddrSrc			= 1'b0;
+			//MemRead			= 1'b0;
+			//MemWrite			= 1'b0;
+			//WritebackSrc	= 1'b0;
+			//IRWrite			= 1'b0;
+			
+			//ALUControl		= 1'b0;
+			PCSrc				= 1'b0;	// ALUResult (OldPC+ImmExt)
+			ALUSrcA			= 2'b01; // A = OldPC
+			ALUSrcB			= 2'b10; // B = ImmExt
+			//RegWrite			= 1'b0;
+			end
 				
 		// ===== Memory Address Calculation ============
 		MEM_ADDR: begin
@@ -350,7 +375,7 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			WritebackSrc	= 1'b0;	// DataReg
+			WritebackSrc	= 1'b0;	// Data_Reg
 			//IRWrite			= 1'b0;
 		
 			//PCSrc				= 1'b0;
@@ -364,9 +389,24 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			WritebackSrc	= 1'b1; // AluResult
+			WritebackSrc	= 1'b1; // ALUOut_Reg
 			//IRWrite			= 1'b0;
 		
+			//PCSrc				= 1'b0;
+			//ALUSrcA			= 2'b00;
+			//ALUSrcB			= 2'b00;
+			RegWrite			= 1'b1;	// Set RegWrite
+			end
+			
+		JAL_WRTBCK: begin
+			//PCWrite			= 1'b0;
+			//AddrSrc			= 1'b0;
+			//MemRead			= 1'b0;
+			//MemWrite			= 1'b0;
+			WritebackSrc	= 1'b1; // ALUOut_Reg
+			//IRWrite			= 1'b0;
+			
+			//ALUControl		= 1'b0;
 			//PCSrc				= 1'b0;
 			//ALUSrcA			= 2'b00;
 			//ALUSrcB			= 2'b00;
@@ -438,314 +478,3 @@ end
 
 
 endmodule
-
-// Machine states
-//localparam S0_FETCH					= 4'd00;
-//localparam S1_DECODE					= 4'd01;
-//localparam S2_MEM_ADR				= 4'd02;
-//localparam S3_MEM_READ				= 4'd03;
-//localparam S4_MEM_WRITEBACK		= 4'd04;
-//localparam S5_MEM_WRITE				= 4'd05;
-//localparam S6_EXECUTE				= 4'd06;
-//localparam S7_ALU_WRITEBACK		= 4'd07;
-//localparam S8_BRANCH					= 4'd08;
-//localparam S9_ADDI_EXECUTE			= 4'd09;
-//localparam S10_ADDI_WRITEBACK		= 4'd10;
-//localparam S11_ANDI_EXECUTE		= 4'd11;
-//localparam S12_EXECUTE				= 4'd12;
-//localparam S13_EXECUTE				= 4'd13;
-//localparam S14_ALU_WRITEBACK_2	= 4'd14;
-//
-//// Constants
-////localparam INSTR_OPC_LW				= 6'bxx_xxxx;
-////localparam INSTR_OPC_SW				= 6'bxx_xxxx;
-////localparam INSTR_OPC_R_TYPE		= 6'h00;
-////localparam INSTR_OPC_R				= 6'h00;
-//
-//localparam INSTR_OPC_LW				= 6'h23;
-//localparam INSTR_OPC_SW				= 6'h2B;
-//localparam INSTR_OPC_ADDI			= 6'h08;
-//localparam INSTR_OPC_ANDI			= 6'h0C;
-//
-//localparam INSTR_OPC_SD				= 6'h3F;
-//
-////localparam INSTR_OPC_ADD			= 6'h20;
-////localparam INSTR_OPC_OR				= 6'h25;
-////localparam INSTR_OPC_SLL			= 6'h00;
-//localparam INSTR_FNC_ADD			= 6'h20;
-//localparam INSTR_FNC_OR				= 6'h25;
-//localparam INSTR_FNC_SLL			= 6'h00;
-//localparam INSTR_OPC_R				= 6'h00;
-//wire [3:0] MC_State /*synthesis keep*/;
-//assign MC_State = state; // To read with Signal Tap
-
-// Next state logic & Present state FF's
-//always @(posedge rst, posedge clk) begin
-//	
-//	if (rst) 
-//		state <= S0_FETCH;
-//	
-//	else
-//		case(state)
-//		
-//			S0_FETCH: begin
-//				state <= S1_DECODE;
-//				end
-//				
-//			S1_DECODE: begin
-//			
-//				case(Opcode)
-//					INSTR_OPC_R: begin
-//					
-//						case(Funct)
-//							INSTR_FNC_ADD:	state <= S6_EXECUTE;
-//							INSTR_FNC_OR:	state <= S6_EXECUTE;
-//							INSTR_FNC_SLL:	state <= S12_EXECUTE;
-//							
-//							
-//						endcase
-//						
-//					end
-//					
-//					INSTR_OPC_LW:	state <= S2_MEM_ADR;
-//					
-//					INSTR_OPC_SW:	state <= S2_MEM_ADR;
-//					
-////					INSTR_OPC_ADD:	state <= S6_EXECUTE;
-////					INSTR_OPC_OR:	state <= S6_EXECUTE;
-////					//INSTR_OPC_SLL:	state <= S12_EXECUTE;
-////					INSTR_OPC_SLL:	state <= S6_EXECUTE;
-//					
-//					INSTR_OPC_ADDI:state <= S9_ADDI_EXECUTE;
-//					
-//					INSTR_OPC_ANDI:state <= S11_ANDI_EXECUTE;
-//					
-//					INSTR_OPC_SD:	state <= S13_EXECUTE;
-//				
-//				endcase	
-//													
-//				end
-//				
-//			S2_MEM_ADR: begin
-//				
-//				case(Opcode)
-//					INSTR_OPC_LW:	state <= S3_MEM_READ;
-//					INSTR_OPC_SW:	state <= S5_MEM_WRITE;
-//				endcase	
-//				
-//				end
-//				
-//			S3_MEM_READ: begin
-//				state <= S4_MEM_WRITEBACK;
-//				end
-//				
-//			S4_MEM_WRITEBACK: begin
-//				state <= S0_FETCH;
-//				end
-//				
-//			S5_MEM_WRITE: begin
-//				state <= S0_FETCH;
-//				end
-//				
-//			S6_EXECUTE: begin
-//				state <= S7_ALU_WRITEBACK;
-//				end
-//				
-//			S12_EXECUTE: begin
-//				state <= S7_ALU_WRITEBACK;
-//				end
-//				
-//			S13_EXECUTE: begin
-//				state <= S14_ALU_WRITEBACK_2;
-//				end
-//				
-//			S7_ALU_WRITEBACK: begin
-//				state <= S0_FETCH;
-//				end
-//				
-//			S14_ALU_WRITEBACK_2: begin
-//				if(TxSent == 1'b1)
-//					state <= S0_FETCH;
-//				//else
-//					//state <= S14_ALU_WRITEBACK_2;
-//				end
-//				
-//			S8_BRANCH: begin
-//				// Not required
-//				end
-//			
-//			S9_ADDI_EXECUTE: begin
-//				state <= S10_ADDI_WRITEBACK;
-//				end
-//			
-//			S10_ADDI_WRITEBACK: begin
-//				state <= S0_FETCH;
-//				end
-//			
-//			S11_ANDI_EXECUTE: begin
-//				state <= S10_ADDI_WRITEBACK;
-//				end
-//
-//			
-//			default:
-//				state <= S0_FETCH;
-//		
-//		endcase
-//	
-//	
-//end
-//
-//// Output logic
-//always @(state) begin
-//	
-//	// Default values
-//	MemtoReg = 1'b0;	// MUXs Selectors
-//	RegDst	= 1'b0;	//
-//	IorD		= 1'b0;	//
-//	PCSrc		= 1'b0;	//
-//	//ALUSrcA	= 1'b0;	// Added
-//	ALUSrcA	= 2'b00;	//
-//	ALUSrcB	= 2'b00;	//
-//	IRWrite	= 1'b0;	// Registers Enablers
-//	MemWrite	= 1'b0;	//
-//	PCWrite	= 1'b0;	//
-//	//Branch	= 1'b0;	//
-//	RegWrite	= 1'b0;	//
-//	ALUOp		= 2'b00;	//
-//	TxSend	= 1'b0;
-//		
-//	case(state)
-//	
-//		S0_FETCH: begin
-//			IorD			= 1'b0;
-//			PCSrc			= 1'b0;
-//			//ALUSrcA		= 1'b0;
-//			ALUSrcA		= 2'b00;	// Added
-//			ALUSrcB		= 2'b01;
-//			IRWrite		= 1'b1;
-//			MemWrite		= 1'b0;
-//			PCWrite		= 1'b1;
-//			RegWrite		= 1'b0;
-//			ALUOp			= 2'b00;
-//			end
-//			
-//		S1_DECODE: begin
-//			IRWrite		= 1'b0;
-//			MemWrite		= 1'b0;
-//			PCWrite		= 1'b0;
-//			RegWrite		= 1'b0;
-//			end
-//		
-//		S2_MEM_ADR: begin
-//			//ALUSrcA		= 1'b1;
-//			ALUSrcA		= 2'b01;	// Added
-//			ALUSrcB		= 2'b10;
-//			ALUOp			= 2'b00;
-//			end
-//		
-//		S3_MEM_READ: begin
-//			IorD			= 1'b1;
-//			end
-//			
-//		S4_MEM_WRITEBACK: begin
-//			MemtoReg		= 1'b1;
-//			RegDst		= 1'b0;			
-//			RegWrite		= 1'b1;
-//			end
-//			
-//		S5_MEM_WRITE: begin
-//			IorD			= 1'b1;
-//			MemWrite		= 1'b1;
-//			end
-//				
-//		S6_EXECUTE: begin
-//			//ALUSrcA		= 1'b1;
-//			ALUSrcA		= 2'b01;	// Added
-//			ALUSrcB		= 2'b00;
-//			ALUOp			= 2'b10;
-//			end
-//			
-//		S12_EXECUTE: begin
-//			//ALUSrcA		= 1'b1;
-//			ALUSrcA		= 2'b10;	// Added * sll
-//			ALUSrcB		= 2'b11;
-//			ALUOp			= 2'b10;
-//			end
-//			
-//		S13_EXECUTE: begin
-//			//ALUSrcA		= 1'b1;
-//			ALUSrcA		= 2'b10;	// Added * sll
-//			ALUSrcB		= 2'b11;
-//			ALUOp			= 2'b10;
-//			TxSend		= 1'b1;
-//			end
-//			
-//		
-//		S7_ALU_WRITEBACK: begin
-//			MemtoReg		= 1'b0;
-//			RegDst		= 1'b1;			
-//			RegWrite		= 1'b1;
-//			end
-//			
-//		S8_BRANCH: begin
-//			// Not required
-//			end
-//		
-//		S9_ADDI_EXECUTE: begin
-//			//ALUSrcA		= 1'b1;
-//			ALUSrcA		= 2'b01;	// Added
-//			ALUSrcB		= 2'b10;
-//			ALUOp			= 2'b00;
-//			end
-//		
-//		S10_ADDI_WRITEBACK: begin
-//			MemtoReg		= 1'b0;
-//			RegDst		= 1'b0;			
-//			RegWrite		= 1'b1;
-//			end
-//			
-//		S11_ANDI_EXECUTE: begin
-//			//ALUSrcA		= 1'b1;
-//			ALUSrcA		= 2'b01;	// Added
-//			ALUSrcB		= 2'b10;
-//			ALUOp			= 2'b10;
-//			end
-//			
-//		default: begin
-//			// Default values
-//			MemtoReg = 1'b0;	// MUXs Selectors
-//			RegDst	= 1'b0;	//
-//			IorD		= 1'b0;	//
-//			PCSrc		= 1'b0;	//
-//			//ALUSrcA	= 1'b0;	//
-//			ALUSrcA	= 2'b00;	// Added
-//			ALUSrcB	= 2'b00;	//
-//			IRWrite	= 1'b0;	// Registers Enablers
-//			MemWrite	= 1'b0;	//
-//			PCWrite	= 1'b0;	//
-//			//Branch	= 1'b0;	//
-//			RegWrite	= 1'b0;	//
-//			ALUOp		= 2'b00;	//
-//			TxSend	= 1'b0;
-//			end
-//		
-//		
-//			
-//	endcase
-//
-//end
-//endmodule
-
-// experimental stuff
-//	MemtoReg = MemtoReg;	// MUXs Selectors
-//	RegDst	= RegDst;	//
-//	IorD		= IorD;		//
-//	PCSrc		= PCSrc;		//
-//	ALUSrcA	= ALUSrcA;	//
-//	ALUSrcB	= ALUSrcB;	//
-//	IRWrite	= IRWrite;	// Registers Enablers
-//	MemWrite	= MemWrite;	//
-//	PCWrite	= PCWrite;	//
-//	//Branch	= Branch;	//
-//	RegWrite	= RegWrite;	//
-//	ALUOp		= ALUOp;		//

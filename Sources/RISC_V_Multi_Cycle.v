@@ -47,8 +47,10 @@ localparam ADDR_PROGRAM_MIN	= 32'h 0040_0000;
 localparam DATA_FILE			= "..//Quartus_Project//Memory_Files//data.dat";
 localparam DATA_DEPTH		=	16; // 2 data
 // Instruction memory parameters
-localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//lw-sw-example.dat";
-localparam INSTR_DEPTH		=	03;
+localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//gpio-copy-in2out.dat";
+localparam INSTR_DEPTH		=	06;
+//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//lw-sw-example.dat";
+//localparam INSTR_DEPTH		=	03;
 //localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//instr.dat";
 //localparam INSTR_DEPTH		=	13;
 
