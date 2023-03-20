@@ -31,32 +31,33 @@ localparam GPIO_OUT_ADDR	= 2'h0;
 reg [7:0] GPIO_REG_OUT;
 assign DataOut = {24'b0,GPIO_REG_OUT};
 
-//always @ (posedge rst, posedge clk) begin
-always @ (posedge rst, posedge clk, posedge Select) begin
+always @ (posedge rst, /*posedge clk,*/ posedge Select) begin
 
 	if(rst) begin
-		GPIO_REG_OUT	= 8'b0;
-		GPIO_Out			= 8'b0;
+		GPIO_REG_OUT	<= 8'b0;
+		GPIO_Out			<= 8'b0;
 		end
 		
 	else if(Select) begin	
 		
-		case(Address[1:0])
-			GPIO_IN_ADDR:	GPIO_REG_OUT = GPIO_In;
-			GPIO_OUT_ADDR:	GPIO_Out = DataIn[7:0];
-			default: begin
-				GPIO_REG_OUT	= 8'b0;
-				GPIO_Out			= 8'b0;
-			end
+		case(Address[0:0])
+			GPIO_IN_ADDR:	GPIO_REG_OUT <= GPIO_In;
+			GPIO_OUT_ADDR:	GPIO_Out <= DataIn[7:0];
+//			default: begin
+////				GPIO_REG_OUT	= 8'b0;
+////				GPIO_Out			= 8'b0;
+//				GPIO_REG_OUT <= GPIO_REG_OUT;
+//				GPIO_Out <= GPIO_Out;
+//			end
 		endcase
 
 	end
 	
 	else begin
-//		GPIO_REG_OUT = GPIO_REG_OUT;
-//		GPIO_Out = GPIO_Out;
-		GPIO_REG_OUT	= 8'b0;
-		GPIO_Out			= 8'b0;
+		GPIO_REG_OUT <= GPIO_REG_OUT;
+		GPIO_Out <= GPIO_Out;
+//		GPIO_REG_OUT	= 8'b0;
+//		GPIO_Out			= 8'b0;
 		end
 		
 	

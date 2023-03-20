@@ -50,29 +50,7 @@ set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_location_assignment PIN_AF14 -to Ref_Clk
-set_location_assignment PIN_AJ4 -to rst
-set_location_assignment PIN_AA24 -to GPIO_Port_Out[0]
-set_location_assignment PIN_AB23 -to GPIO_Port_Out[1]
-set_location_assignment PIN_AC23 -to GPIO_Port_Out[2]
-set_location_assignment PIN_AF24 -to GPIO_Port_Out[7]
-set_location_assignment PIN_AE24 -to GPIO_Port_Out[6]
-set_location_assignment PIN_AF25 -to GPIO_Port_Out[5]
-set_location_assignment PIN_AG25 -to GPIO_Port_Out[4]
-set_location_assignment PIN_AD24 -to GPIO_Port_Out[3]
-set_location_assignment PIN_AC22 -to GPIO_Port_Out[9]
-set_location_assignment PIN_AB22 -to GPIO_Port_Out[8]
-set_location_assignment PIN_AA30 -to GPIO_Port_In[9]
-set_location_assignment PIN_AC29 -to GPIO_Port_In[8]
-set_location_assignment PIN_AD30 -to GPIO_Port_In[7]
-set_location_assignment PIN_AC28 -to GPIO_Port_In[6]
-set_location_assignment PIN_V25 -to GPIO_Port_In[5]
-set_location_assignment PIN_W25 -to GPIO_Port_In[4]
-set_location_assignment PIN_AC30 -to GPIO_Port_In[3]
-set_location_assignment PIN_AB28 -to GPIO_Port_In[2]
-set_location_assignment PIN_Y27 -to GPIO_Port_In[1]
-set_location_assignment PIN_AB30 -to GPIO_Port_In[0]
-set_location_assignment PIN_W17 -to Beat_out
+set_location_assignment PIN_AA30 -to rst
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name VERILOG_FILE ../Sources/UART_Rx.v
@@ -107,4 +85,28 @@ set_global_assignment -name VERILOG_FILE ../Sources/Memory_Map_Decoder.v
 set_global_assignment -name VERILOG_FILE ../Sources/GPIO_Port.v
 set_global_assignment -name QIP_FILE IP_Catalog/PLL_Intel_FPGA/PLL_Intel_FPGA.qip
 set_global_assignment -name SIP_FILE IP_Catalog/PLL_Intel_FPGA/PLL_Intel_FPGA.sip
+set_location_assignment PIN_AF14 -to clk
+set_location_assignment PIN_AA24 -to GPIO_Out[0]
+set_location_assignment PIN_AB23 -to GPIO_Out[1]
+set_location_assignment PIN_AC23 -to GPIO_Out[2]
+set_location_assignment PIN_AD24 -to GPIO_Out[3]
+set_location_assignment PIN_AG25 -to GPIO_Out[4]
+set_location_assignment PIN_AF25 -to GPIO_Out[5]
+set_location_assignment PIN_AE24 -to GPIO_Out[6]
+set_location_assignment PIN_AF24 -to GPIO_Out[7]
+set_location_assignment PIN_AB22 -to GPIO_Out[8]
+set_location_assignment PIN_AC22 -to GPIO_Out[9]
+set_location_assignment PIN_AB30 -to GPIO_In[0]
+set_location_assignment PIN_Y27 -to GPIO_In[1]
+set_location_assignment PIN_AB28 -to GPIO_In[2]
+set_location_assignment PIN_AC30 -to GPIO_In[3]
+set_location_assignment PIN_W25 -to GPIO_In[4]
+set_location_assignment PIN_V25 -to GPIO_In[5]
+set_location_assignment PIN_AC28 -to GPIO_In[6]
+set_location_assignment PIN_AD30 -to GPIO_In[7]
+set_location_assignment PIN_AC29 -to GPIO_In[8]
+set_location_assignment PIN_AK2 -to UART_Rx
+set_location_assignment PIN_AK3 -to UART_Rx_Fw
+set_location_assignment PIN_W15 -to UART_Tx
+set_location_assignment PIN_Y16 -to UART_Tx_Fw
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

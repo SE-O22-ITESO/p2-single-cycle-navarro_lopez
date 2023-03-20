@@ -21,9 +21,7 @@ module RISC_V_Multi_Cycle(
 	output UART_Tx,
 	input UART_Rx, 
 	output UART_Tx_Fw,
-	output UART_Rx_Fw,
-	// Heard beat
-	output Heard_beat
+	output UART_Rx_Fw
 	
 );
 
@@ -34,7 +32,6 @@ module RISC_V_Multi_Cycle(
 assign UART_Tx_Fw = UART_Tx;
 assign UART_Rx_Fw = UART_Rx;
 assign GPIO_Out[9] = clk;
-assign GPIO_Out[8] = 1'b0;
 
 // ====================================================
 // = Parameters            
@@ -80,7 +77,7 @@ Heard_Bit #(.Half_Period_Counts(25'd25_000_000) ) Heard_monitor (
 	.clk					(clk), // Use when clock is 50MHz
 	.rst					(~rst),
 	.enable				(1'b1),
-	.heard_bit_out		(Heard_beat)
+	.heard_bit_out		(GPIO_Out[8])
 );
 
 // ====================================================
