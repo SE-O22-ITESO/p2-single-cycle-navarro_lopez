@@ -13,8 +13,8 @@ reg MemWrite;
 reg [31:00] AddrIn;
 reg [31:00] DataIn;
 wire [31:00] DataOut;
-
 wire [31:00] AddrOut;
+
 reg [31:00] DataIn0;
 wire [31:00] DataOut0;
 wire Select0;
@@ -25,6 +25,11 @@ wire Select1;
 reg [31:00] DataIn2;
 wire [31:00] DataOut2;
 wire Select2;
+
+reg [31:00] DataIn3;
+wire [31:00] DataOut3;
+wire Select3;
+wire Write3;
 
 Memory_Map_Decoder MMD_UUT(
 	// UP Interface
@@ -49,26 +54,32 @@ Memory_Map_Decoder MMD_UUT(
 	// GPIO interface
 	.DataIn2		(DataIn2),	// Input data Q from GPIO
 	.DataOut2	(DataOut2),	// Ouput data to GPIO
-	.Select2		(Select2)		// Output chip select to GPIO
+	.Select2		(Select2),		// Output chip select to GPIO
+	
+	// UART interface
+	.DataIn3		(DataIn3),	// Input data from UART
+	.DataOut3	(DataOut3),	// Ouput data to UART
+	.Select3		(Select3),		// Output chip select to UART
+	.Write3		(Write3)		// Output write to UART
 );
 
 // ====================================================
 // = Parameters            
 // ====================================================
-localparam ADDR_DATA_1_MAX		= 32'h FFFF_FFFF;
-localparam ADDR_DATA_1_MIN		= 32'h 1001_002C;
+localparam ADDR_DATA_H_MAX		= 32'h 7FFF_FFFF;
+localparam ADDR_DATA_H_MIN		= 32'h 1001_003C;
+
+localparam ADDR_UART_MAX		= 32'h 1001_003B;
+localparam ADDR_UART_MIN		= 32'h 1001_002C;
 
 localparam ADDR_GPIO_MAX		= 32'h 1001_002B;
 localparam ADDR_GPIO_MIN		= 32'h 1001_0024;
 
-localparam ADDR_DATA_0_MAX		= 32'h 1001_0023;
-localparam ADDR_DATA_0_MIN		= 32'h 1000_0000;
+localparam ADDR_DATA_L_MAX		= 32'h 1001_0023;
+localparam ADDR_DATA_L_MIN		= 32'h 1001_0000;
 
 localparam ADDR_PROGRAM_MAX	= 32'h 0FFF_FFFF;
 localparam ADDR_PROGRAM_MIN	= 32'h 0040_0000;
-
-localparam ADDR_RESERVED_MAX	= 32'h 003F_FFFF;
-localparam ADDR_RESERVED_MIN	= 32'h 0000_0000;
 
 initial begin
 	
@@ -79,75 +90,110 @@ initial begin
 	DataIn		= 32'h 0000_0000;
 	
 	// Data Memory interface
-	DataIn0		= 32'h dead_beef;
-	//Select0		= 1'b0;
+	DataIn0		= 32'h deb1_0000;
+	
 	// Instruction Memory interface
-	DataIn1		= 32'h bebe_bebe;
-	//Select1		= 1'b0;
+	DataIn1		= 32'h deb1_0001;
+	
 	// GPIO interface
-	DataIn2		= 32'h ded0_ded0;
-	//Select2		= 1'b0;
+	DataIn2		= 32'h deb1_0002;
+	
+	// UART interface
+	DataIn3		= 32'h deb1_0003;
 	
 	#1;
+	
 	MemRead		= 1'b0;
 	MemWrite	= 1'b1;
-	AddrIn		= ADDR_DATA_1_MAX;
-	DataIn		= 32'h f1fa_f1fa;
-	
+	AddrIn		= 32'h0;
+	DataIn		= 32'h f1fa_0000;
 	#1;
+	
 	MemRead		= 1'b1;
 	MemWrite	= 1'b0;
-	AddrIn		= ADDR_DATA_1_MIN;
-	DataIn		= 32'h 0be1_0be1;
-	
+	AddrIn		= ADDR_PROGRAM_MIN - 1;
+	DataIn		= 32'h f1fa_0001;
 	#1;
-	MemRead		= 1'b1;
-	MemWrite	= 1'b1;
-	AddrIn		= ADDR_GPIO_MAX;
-	DataIn		= 32'h b000_b000;
 	
-	#1;
 	MemRead		= 1'b0;
-	MemWrite	= 1'b0;
-	AddrIn		= ADDR_GPIO_MIN;
-	DataIn		= 32'h f1fa_f1fa;
-	
-	#1;
-	MemRead		= 1'b1;
-	MemWrite	= 1'b1;
-	AddrIn		= ADDR_DATA_0_MAX;
-	DataIn		= 32'h 0be1_0be1;
-	
-	#1;
-	MemRead		= 1'b0;
-	MemWrite	= 1'b1;
-	AddrIn		= ADDR_DATA_0_MIN;
-	DataIn		= 32'h b000_b000;
-	
-	#1;
-	MemRead		= 1'b0;
-	MemWrite	= 1'b0;
-	AddrIn		= ADDR_PROGRAM_MAX;
-	DataIn		= 32'h f1fa_f1fa;
-	
-	#1;
-	MemRead		= 1'b1;
 	MemWrite	= 1'b1;
 	AddrIn		= ADDR_PROGRAM_MIN;
-	DataIn		= 32'h 0be1_0be1;
-	
+	DataIn		= 32'h f1fa_0002;
 	#1;
-	MemRead		= 1'b0;
-	MemWrite	= 1'b0;
-	AddrIn		= ADDR_RESERVED_MAX;
-	DataIn		= 32'h f1fa_f1fa;
 	
-	#1;
 	MemRead		= 1'b1;
-	MemWrite	= 1'b1;
-	AddrIn		= ADDR_RESERVED_MIN;
-	DataIn		= 32'h 0be1_0be1;
+	MemWrite	= 1'b0;
+	AddrIn		= ADDR_PROGRAM_MAX;
+	DataIn		= 32'h f1fa_0003;
+	#1;
 	
+	MemRead		= 1'b0;
+	MemWrite	= 1'b1;
+	AddrIn		= ADDR_DATA_L_MIN - 1;
+	DataIn		= 32'h f1fa_0004;
+	#1;
+	
+	MemRead		= 1'b1;
+	MemWrite	= 1'b0;
+	AddrIn		= ADDR_DATA_L_MIN;
+	DataIn		= 32'h f1fa_0005;
+	#1;
+	
+	MemRead		= 1'b0;
+	MemWrite	= 1'b1;
+	AddrIn		= ADDR_DATA_L_MAX;
+	DataIn		= 32'h f1fa_0006;
+	#1;
+	
+	MemRead		= 1'b1;
+	MemWrite	= 1'b0;
+	AddrIn		= ADDR_GPIO_MIN;
+	DataIn		= 32'h f1fa_0007;
+	#1;
+	
+	MemRead		= 1'b0;
+	MemWrite	= 1'b1;
+	AddrIn		= ADDR_GPIO_MAX;
+	DataIn		= 32'h f1fa_0008;
+	#1;
+	
+	MemRead		= 1'b1;
+	MemWrite	= 1'b0;
+	AddrIn		= ADDR_UART_MIN;
+	DataIn		= 32'h f1fa_0009;
+	#1;
+	
+	MemRead		= 1'b0;
+	MemWrite	= 1'b1;
+	AddrIn		= ADDR_UART_MAX;
+	DataIn		= 32'h f1fa_000a;
+	#1;
+	
+	
+	MemRead		= 1'b1;
+	MemWrite	= 1'b0;
+	AddrIn		= ADDR_DATA_H_MIN;
+	DataIn		= 32'h f1fa_000b;
+	#1;
+	
+	MemRead		= 1'b0;
+	MemWrite	= 1'b1;
+	AddrIn		= ADDR_DATA_H_MAX;
+	DataIn		= 32'h f1fa_000c;
+	#1;
+	
+	MemRead		= 1'b1;
+	MemWrite	= 1'b0;
+	AddrIn		= ADDR_DATA_H_MAX + 1;
+	DataIn		= 32'h f1fa_000d;
+	#1;
+	
+	MemRead		= 1'b0;
+	MemWrite	= 1'b1;
+	AddrIn		= 32'h ffff_ffff;
+	DataIn		= 32'h f1fa_000f;
+	#1;
+		
 end
 
 //always begin

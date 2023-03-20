@@ -43,21 +43,6 @@ set_global_assignment -name TOP_LEVEL_ENTITY RISC_V_Multi_Cycle
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 21.1.1
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "23:50:37  MARCH 02, 2023"
 set_global_assignment -name LAST_QUARTUS_VERSION "21.1.1 Lite Edition"
-set_global_assignment -name VERILOG_FILE ../Sources/Write_Control.v
-set_global_assignment -name VERILOG_FILE ../Sources/single_port_ram.v
-set_global_assignment -name VERILOG_FILE ../Sources/RISC_V_Multi_Cycle.v
-set_global_assignment -name VERILOG_FILE ../Sources/Register_Param.v
-set_global_assignment -name VERILOG_FILE ../Sources/Register_File.v
-set_global_assignment -name VERILOG_FILE ../Sources/Register_Bank_Param.v
-set_global_assignment -name VERILOG_FILE ../Sources/Mux_32_1_32.v
-set_global_assignment -name VERILOG_FILE ../Sources/Mux_4_1_Param.v
-set_global_assignment -name VERILOG_FILE ../Sources/Mux_2_1_Param.v
-set_global_assignment -name VERILOG_FILE ../Sources/Main_Controller_FSM.v
-set_global_assignment -name VERILOG_FILE ../Sources/Immediate_Generator_Param.v
-set_global_assignment -name VERILOG_FILE ../Sources/Heard_Bit.v
-set_global_assignment -name VERILOG_FILE ../Sources/Control_Unit.v
-set_global_assignment -name VERILOG_FILE ../Sources/ALU_RISCV_Param.v
-set_global_assignment -name VERILOG_FILE ../Sources/ALU_Decoder.v
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
@@ -65,11 +50,6 @@ set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name VERILOG_FILE ../Sources/Immediate_Generator.v
-set_global_assignment -name VERILOG_FILE ../Sources/Memory_Map_Decoder.v
-set_global_assignment -name VERILOG_FILE ../Sources/GPIO_Port.v
-set_global_assignment -name QIP_FILE IP_Catalog/PLL_Intel_FPGA/PLL_Intel_FPGA.qip
-set_global_assignment -name SIP_FILE IP_Catalog/PLL_Intel_FPGA/PLL_Intel_FPGA.sip
 set_location_assignment PIN_AF14 -to Ref_Clk
 set_location_assignment PIN_AJ4 -to rst
 set_location_assignment PIN_AA24 -to GPIO_Port_Out[0]
@@ -93,4 +73,38 @@ set_location_assignment PIN_AB28 -to GPIO_Port_In[2]
 set_location_assignment PIN_Y27 -to GPIO_Port_In[1]
 set_location_assignment PIN_AB30 -to GPIO_Port_In[0]
 set_location_assignment PIN_W17 -to Beat_out
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name VERILOG_FILE ../Sources/UART_Rx.v
+set_global_assignment -name VERILOG_FILE ../Sources/UART_FSM_Rx.v
+set_global_assignment -name VERILOG_FILE ../Sources/Shift_Register_R_Param.v
+set_global_assignment -name VERILOG_FILE ../Sources/Reg_Param.v
+set_global_assignment -name VERILOG_FILE ../Sources/FF_D_enable.v
+set_global_assignment -name VERILOG_FILE ../Sources/Bit_Rate_Pulse_NoParam.v
+set_global_assignment -name VERILOG_FILE ../Sources/UART_TX_Data_Mux.v
+set_global_assignment -name VERILOG_FILE ../Sources/UART_Tx.v
+set_global_assignment -name VERILOG_FILE ../Sources/UART_Full_Duplex.v
+set_global_assignment -name VERILOG_FILE ../Sources/UART_FSM_Tx.v
+set_global_assignment -name VERILOG_FILE ../Sources/Counter_Param.v
+set_global_assignment -name VERILOG_FILE ../Sources/Counter_2_Limit_w_ovf.v
+set_global_assignment -name VERILOG_FILE ../Sources/Write_Control.v
+set_global_assignment -name VERILOG_FILE ../Sources/single_port_ram.v
+set_global_assignment -name VERILOG_FILE ../Sources/RISC_V_Multi_Cycle.v
+set_global_assignment -name VERILOG_FILE ../Sources/Register_Param.v
+set_global_assignment -name VERILOG_FILE ../Sources/Register_File.v
+set_global_assignment -name VERILOG_FILE ../Sources/Register_Bank_Param.v
+set_global_assignment -name VERILOG_FILE ../Sources/Mux_32_1_32.v
+set_global_assignment -name VERILOG_FILE ../Sources/Mux_4_1_Param.v
+set_global_assignment -name VERILOG_FILE ../Sources/Mux_2_1_Param.v
+set_global_assignment -name VERILOG_FILE ../Sources/Main_Controller_FSM.v
+set_global_assignment -name VERILOG_FILE ../Sources/Immediate_Generator_Param.v
+set_global_assignment -name VERILOG_FILE ../Sources/Heard_Bit.v
+set_global_assignment -name VERILOG_FILE ../Sources/Control_Unit.v
+set_global_assignment -name VERILOG_FILE ../Sources/ALU_RISCV_Param.v
+set_global_assignment -name VERILOG_FILE ../Sources/ALU_Decoder.v
+set_global_assignment -name VERILOG_FILE ../Sources/Immediate_Generator.v
+set_global_assignment -name VERILOG_FILE ../Sources/Memory_Map_Decoder.v
+set_global_assignment -name VERILOG_FILE ../Sources/GPIO_Port.v
+set_global_assignment -name QIP_FILE IP_Catalog/PLL_Intel_FPGA/PLL_Intel_FPGA.qip
+set_global_assignment -name SIP_FILE IP_Catalog/PLL_Intel_FPGA/PLL_Intel_FPGA.sip
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

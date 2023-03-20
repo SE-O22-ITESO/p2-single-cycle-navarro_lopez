@@ -97,7 +97,7 @@ always @(posedge rst, posedge clk) begin
 					//OPCODE_I_TYPE_JR: state <= GNR_WRTBCK; // => Direct to Writeback
 					OPCODE_S_TYPE_SW: state <= MEM_ADDR;	// => Memory address calc
 					OPCODE_B_TYPE_BR: state <= BRN_COMP;	// => Branch completion
-					//OPCODE_U_TYPE_LU: state <= LUI_EXEC;		// Load up imm exe
+					OPCODE_U_TYPE_LU: state <= LUI_EXEC;		// Load up imm exe
 					OPCODE_U_TYPE_AU: state <= AUI_EXEC;	// => Add up imm to pc exe
 					//OPCODE_J_TYPE_JL: state <= 				//
 					default: state <= CPU_HALT;
@@ -123,9 +123,9 @@ always @(posedge rst, posedge clk) begin
 										
 				end
 			
-//			LUI_EXEC begin
-//				state <= GNR_WRTBCK;	// => General writeback
-//				end
+			LUI_EXEC: begin
+				state <= GNR_WRTBCK;	// => General writeback
+				end
 			
 			
 			AUI_EXEC: begin

@@ -81,7 +81,7 @@ always @ (ALUControl, Opcode, Funct3, Funct7) begin
 		//17'b1100111_000_???????: ALUOp = ALU_ADD  ; // jalr
 		
 		// U-Type Upper
-		//17'b0110111_???_???????: ALUOp = ALU_SLL  ; // lui ? check if sll is correct
+		17'b0_0110111_???_???????: ALUOp = ALU_ADD  ; // lui
 		18'b0_0010111_???_???????: ALUOp = ALU_ADD  ; // auipc
 		
 		// R-Type Multiply extension

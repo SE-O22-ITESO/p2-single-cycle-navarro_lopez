@@ -9,29 +9,41 @@
 module RISC_V_Multi_Cycle_TB();
 
 // Inputs
-reg			clk;
-reg			rst;
-reg [9:0] GPIO_Port_In;
-
+reg	clk;
+reg	rst;
+reg [9:0] GPIO_In;
+reg UART_Rx;
 // Outputs
-wire [9:0] GPIO_Port_Out;
+wire [9:0] GPIO_Out;
+wire UART_Tx;
+wire UART_Tx_Fw;
+wire UART_Rx_Fw;
 
 RISC_V_Multi_Cycle RISCV_UUT(
-	.GPIO_Port_In(GPIO_Port_In),
-	.GPIO_Port_Out(GPIO_Port_Out),
+
+	// GPIO Port
+	.GPIO_In	(GPIO_In),
+	.GPIO_Out	(GPIO_Out),
+	
+	// UART Port
+	.UART_Tx	(UART_Tx),
+	.UART_Rx	(UART_Rx),
+	.UART_Tx_Fw	(UART_Tx_Fw),
+	.UART_Rx_Fw	(UART_Rx_Fw),
+	
+	// System
 	.clk(clk),
-	//.outclk_0(clk),
 	.rst(~rst)
-
-
+	
 );
 
 initial begin
 	clk		= 1'b0;
 	rst		= 1'b0;
+	UART_Rx = 1'b0;
 	rst		= 1'b1; #1;
 	rst		= 1'b0;
-	GPIO_Port_In = 10'd2;
+	GPIO_In = 10'd2;
 end
 
 always begin
