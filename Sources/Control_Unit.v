@@ -13,7 +13,7 @@ module Control_Unit(
 	output AddrSrc, 		//
 	output MemRead,		//
 	output MemWrite,		//
-	output WritebackSrc,	//
+	output [01:00] WritebackSrc,	//
 	output IRWrite,		//
 		
 	input [06:00] Opcode,

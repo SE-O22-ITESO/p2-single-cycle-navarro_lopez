@@ -78,7 +78,7 @@ always @ (ALUControl, Opcode, Funct3, Funct7) begin
 		
 		// J-Type Jump and link / (I-Type) Jump and link reg
 		18'b0_1101111_???_???????: ALUOp = ALU_ADD  ; // jal
-		//17'b1100111_000_???????: ALUOp = ALU_ADD  ; // jalr
+		18'b0_1100111_000_???????: ALUOp = ALU_ADD  ; // jalr
 		
 		// U-Type Upper
 		18'b0_0110111_???_???????: ALUOp = ALU_ADD  ; // lui

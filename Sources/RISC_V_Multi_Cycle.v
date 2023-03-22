@@ -44,8 +44,10 @@ localparam ADDR_PROGRAM_MIN	= 32'h 0040_0000;
 localparam DATA_FILE			= "..//Quartus_Project//Memory_Files//data.dat";
 localparam DATA_DEPTH		=	16; // 2 data
 // Instruction memory parameters
-localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-char-send.dat";
-localparam INSTR_DEPTH		=	18;
+localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//jump-link-reg.dat";
+localparam INSTR_DEPTH		=	10;
+//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-char-send.dat";
+//localparam INSTR_DEPTH		=	18;
 //localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-setup.dat";
 //localparam INSTR_DEPTH		=	13;
 //localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//gpio-copy-in2out.dat";
@@ -91,7 +93,7 @@ wire CU_PCWrite;
 wire CU_AddrSrc;
 wire CU_MemRead;
 wire CU_MemWrite;
-wire CU_WritebackSrc;
+wire [1:0] CU_WritebackSrc;
 wire CU_IRWrite;
 wire CU_PCSrc;
 wire [3:0] CU_ALUOp;
@@ -325,15 +327,29 @@ assign a3	= Instr[11:07]; // RD
 assign we3	= CU_RegWrite;
 
 // Writeback Multiplexer
-Mux_2_1_Param #(
+//Mux_2_1_Param #(
+//	.DATA_LENGTH (DATA_LENGTH)
+//	)
+//	WritebackSrc_Mux(
+//	.a		(data),			// 0: DataReg
+//	.b		(alu_out), 		// 1: ALUOut
+//	.sel	(CU_WritebackSrc),
+//	.out	(wd3)
+//);
+
+
+Mux_4_1_Param #(
 	.DATA_LENGTH (DATA_LENGTH)
 	)
 	WritebackSrc_Mux(
-	.a		(data),			// 0: DataReg
-	.b		(alu_out), 		// 1: ALUOut
+	.a		(data),		// 0: DataReg
+	.b		(alu_out), 	// 1: ALUOut
+	.c		(pc_next),	// 2: PC Next
+	.d		(32'd0), 	// 3: 0
 	.sel	(CU_WritebackSrc),
 	.out	(wd3)
 );
+
 
 Register_File Reg_File(
 	.a1	(a1),

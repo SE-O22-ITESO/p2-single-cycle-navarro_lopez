@@ -12,7 +12,7 @@ module Main_Controller_FSM(
 	output reg AddrSrc, 			//
 	output reg MemRead,			//
 	output reg MemWrite,			//
-	output reg WritebackSrc,	//
+	output reg [01:00] WritebackSrc,	//
 	output reg IRWrite,			//
 		
 	input [06:00] Opcode,
@@ -37,18 +37,20 @@ localparam INS_DECODE	= 5'd01;
 localparam REG_EXEC		= 5'd02;
 localparam IMM_EXEC		= 5'd03;
 localparam JAL_EXEC		= 5'd04;
-localparam BRN_COMP		= 5'd05;
-localparam AUI_EXEC		= 5'd06;
-localparam LUI_EXEC		= 5'd07;
-localparam JAL_WRTBCK	= 5'd08;
-localparam GNR_WRTBCK	= 5'd09;
-localparam MEM_ADDR		= 5'd10;
-localparam MEM_LOAD		= 5'd11;
-localparam MEM_STORE		= 5'd12;
-localparam MEM_WRTBCK	= 5'd13;
-localparam BRN_REACH		= 5'd14;
-localparam BRN_REJCT		= 5'd15;
-localparam CPU_HALT		= 5'd16;
+localparam JAR_EXEC		= 5'd05;
+localparam BRN_COMP		= 5'd06;
+localparam AUI_EXEC		= 5'd07;
+localparam LUI_EXEC		= 5'd08;
+localparam JAL_WRTBCK	= 5'd09;
+localparam JAR_WRTBCK	= 5'd10;
+localparam GNR_WRTBCK	= 5'd11;
+localparam MEM_ADDR		= 5'd12;
+localparam MEM_LOAD		= 5'd13;
+localparam MEM_STORE		= 5'd14;
+localparam MEM_WRTBCK	= 5'd15;
+localparam BRN_REACH		= 5'd16;
+localparam BRN_REJCT		= 5'd17;
+localparam CPU_HALT		= 5'd31;
 
 localparam OPCODE_R_TYPE_LA	= 7'b0110011;	// R-Type Logic Arithmetic
 localparam OPCODE_I_TYPE_LA	= 7'b0010011;	// I-Type Logic Arithmetic
@@ -92,15 +94,15 @@ always @(posedge rst, posedge clk) begin
 			INS_DECODE: begin
 				
 				case(Opcode)
-//					OPCODE_R_TYPE_LA: state <= REG_EXEC;	// => Register Execute
+					OPCODE_R_TYPE_LA: state <= REG_EXEC;	// => Register Execute
 					OPCODE_I_TYPE_LA: state <= IMM_EXEC;	// => Immediate execute
 					OPCODE_I_TYPE_LW: state <= MEM_ADDR;	// => Memory address calc
-//					OPCODE_I_TYPE_JR: state <= GNR_WRTBCK; // => Direct to Writeback
+					OPCODE_I_TYPE_JR: state <= JAR_WRTBCK; // => Direct to Writeback
 					OPCODE_S_TYPE_SW: state <= MEM_ADDR;	// => Memory address calc
 					OPCODE_B_TYPE_BR: state <= BRN_COMP;	// => Branch completion
 					OPCODE_U_TYPE_LU: state <= LUI_EXEC;	// => Load up imm exe
 					OPCODE_U_TYPE_AU: state <= AUI_EXEC;	// => Add up imm to pc exe
-					OPCODE_J_TYPE_JL: state <= JAL_WRTBCK;	// => 
+					OPCODE_J_TYPE_JL: state <= JAL_WRTBCK;	// => Direct to Writeback
 					default: state <= CPU_HALT;
 				endcase
 				
@@ -169,6 +171,10 @@ always @(posedge rst, posedge clk) begin
 				state <= JAL_EXEC;	// => Execute
 				end
 			
+			JAR_WRTBCK: begin
+				state <= JAR_EXEC;	// => Execute
+				end
+						
 			// ===== Branch completion ==================================
 			BRN_REACH: begin
 				state <= INS_FETCH;	// => Instruction fetch
@@ -199,7 +205,7 @@ always @(state) begin
 	AddrSrc			= 1'b0;
 	MemRead			= 1'b0;
 	MemWrite			= 1'b0;
-	WritebackSrc	= 1'b0;
+	WritebackSrc	= 2'b00;
 	IRWrite			= 1'b0;
 	
 	ALUControl		= 1'b0;
@@ -215,7 +221,7 @@ always @(state) begin
 			AddrSrc			= 1'b0;	// Addr = PC
 			MemRead			= 1'b1;	// Read instr memory
 			//MemWrite			= 1'b0;
-			//WritebackSrc	= 1'b0; 
+			//WritebackSrc	= 2'b00;
 			IRWrite			= 1'b1; // Set IRWrite 
 			
 			ALUControl		= 1'b1;	// Set ALUControl
@@ -231,7 +237,7 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			//WritebackSrc	= 1'b0;
+			//WritebackSrc		= 2'b00;
 			//IRWrite			= 1'b0;
 			
 			//PCSrc				= 1'b0;
@@ -246,7 +252,7 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			//WritebackSrc	= 1'b0;
+			//WritebackSrc		= 2'b00;
 			//IRWrite			= 1'b0;
 		
 			//PCSrc				= 1'b0;
@@ -260,7 +266,7 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			//WritebackSrc	= 1'b0;
+			//WritebackSrc		= 2'b00;
 			//IRWrite			= 1'b0;
 		
 			//PCSrc				= 1'b0;
@@ -274,7 +280,7 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			//WritebackSrc	= 1'b0;
+			//WritebackSrc		= 2'b00;
 			//IRWrite			= 1'b0;
 		
 			//PCSrc				= 1'b0;
@@ -288,7 +294,7 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			//WritebackSrc	= 1'b0;
+			//WritebackSrc		= 2'b00;
 			//IRWrite			= 1'b0;
 		
 			//PCSrc				= 1'b0;
@@ -302,7 +308,7 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			//WritebackSrc	= 1'b0;
+			//WritebackSrc		= 2'b00;
 			//IRWrite			= 1'b0;
 		
 			//PCSrc				= 1'b0;
@@ -316,12 +322,27 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			//WritebackSrc	= 1'b0;
+			//WritebackSrc		= 2'b00;
 			//IRWrite			= 1'b0;
 			
 			//ALUControl		= 1'b0;
 			PCSrc				= 1'b0;	// ALUResult (OldPC+ImmExt)
 			ALUSrcA			= 2'b01; // A = OldPC
+			ALUSrcB			= 2'b10; // B = ImmExt
+			//RegWrite			= 1'b0;
+			end
+			
+		JAR_EXEC: begin
+			PCWrite			= 1'b1;	//Set PCWrite
+			//AddrSrc			= 1'b0;
+			//MemRead			= 1'b0;
+			//MemWrite			= 1'b0;
+			//WritebackSrc		= 2'b00;
+			//IRWrite			= 1'b0;
+			
+			//ALUControl		= 1'b0;
+			PCSrc				= 1'b0;	// ALUResult (AReg+ImmExt)
+			ALUSrcA			= 2'b10; // A = AReg
 			ALUSrcB			= 2'b10; // B = ImmExt
 			//RegWrite			= 1'b0;
 			end
@@ -332,7 +353,7 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			//WritebackSrc	= 1'b0;
+			//WritebackSrc		= 2'b00;
 			//IRWrite			= 1'b0;
 		
 			//PCSrc				= 1'b0;
@@ -346,7 +367,7 @@ always @(state) begin
 			AddrSrc			= 1'b1; // ALUOut
 			MemRead			= 1'b1; // Set MemRead
 			//MemWrite			= 1'b0;
-			//WritebackSrc	= 1'b0;
+			//WritebackSrc		= 2'b00;
 			//IRWrite			= 1'b0;
 		
 			//PCSrc				= 1'b0;
@@ -360,7 +381,7 @@ always @(state) begin
 			AddrSrc			= 1'b1; // ALUOut
 			//MemRead			= 1'b0;
 			MemWrite			= 1'b1; // Set MemWrite
-			//WritebackSrc	= 1'b0;
+			//WritebackSrc		= 2'b00;
 			//IRWrite			= 1'b0;
 		
 			//PCSrc				= 1'b0;
@@ -375,13 +396,13 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			WritebackSrc	= 1'b0;	// Data_Reg
+			WritebackSrc		= 2'b00; // Data_Reg
 			//IRWrite			= 1'b0;
 		
 			//PCSrc				= 1'b0;
 			//ALUSrcA			= 2'b00;
 			//ALUSrcB			= 2'b00;
-			RegWrite			= 1'b1;	// Set RegWrite
+			RegWrite				= 1'b1;	// Set RegWrite
 			end
 			
 		GNR_WRTBCK: begin
@@ -389,13 +410,13 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			WritebackSrc	= 1'b1; // ALUOut_Reg
+			WritebackSrc		= 2'b01; // ALUOut_Reg
 			//IRWrite			= 1'b0;
 		
 			//PCSrc				= 1'b0;
 			//ALUSrcA			= 2'b00;
 			//ALUSrcB			= 2'b00;
-			RegWrite			= 1'b1;	// Set RegWrite
+			RegWrite				= 1'b1;	// Set RegWrite
 			end
 			
 		JAL_WRTBCK: begin
@@ -403,7 +424,22 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			WritebackSrc	= 1'b1; // ALUOut_Reg
+			WritebackSrc		= 2'b10; // PCNext
+			//IRWrite			= 1'b0;
+			
+			//ALUControl		= 1'b0;
+			//PCSrc				= 1'b0;
+			//ALUSrcA			= 2'b00;
+			//ALUSrcB			= 2'b00;
+			RegWrite			= 1'b1;	// Set RegWrite
+			end
+			
+		JAR_WRTBCK: begin
+			//PCWrite			= 1'b0;
+			//AddrSrc			= 1'b0;
+			//MemRead			= 1'b0;
+			//MemWrite			= 1'b0;
+			WritebackSrc		= 2'b01; // ALUOut_Reg
 			//IRWrite			= 1'b0;
 			
 			//ALUControl		= 1'b0;
@@ -419,7 +455,7 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			//WritebackSrc	= 1'b0;
+			//WritebackSrc		= 2'b00;
 			//IRWrite			= 1'b0;
 		
 			PCSrc				= 1'b0;	// ALUResult (OldPC+ImmExt)
@@ -434,7 +470,7 @@ always @(state) begin
 			//AddrSrc			= 1'b0;
 			//MemRead			= 1'b0;
 			//MemWrite			= 1'b0;
-			//WritebackSrc	= 1'b0;
+			//WritebackSrc		= 2'b00;
 			//IRWrite			= 1'b0;
 		
 			PCSrc				= 1'b0;	// ALUResult (OldPC+4)
@@ -451,7 +487,7 @@ always @(state) begin
 			AddrSrc			= 1'b0;
 			MemRead			= 1'b0;
 			MemWrite			= 1'b0;
-			WritebackSrc	= 1'b0;
+			WritebackSrc	= 2'b00;
 			IRWrite			= 1'b0;
 
 			PCSrc				= 1'b0;
@@ -466,7 +502,7 @@ always @(state) begin
 			AddrSrc			= 1'b0;
 			MemRead			= 1'b0;
 			MemWrite			= 1'b0;
-			WritebackSrc	= 1'b0;
+			WritebackSrc	= 2'b00;
 			IRWrite			= 1'b0;
 
 			PCSrc				= 1'b0;

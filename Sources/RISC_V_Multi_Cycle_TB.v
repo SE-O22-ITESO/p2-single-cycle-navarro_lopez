@@ -54,8 +54,8 @@ always begin
 	
 	// Clock freq = 50 MHz, period = 20 ns
 	// then 10 ns high and 10 ns low, 20 ns total
-	clk		= ~clk; #10; 
-	//clk		= ~clk; #2; 
+	//clk		= ~clk; #10; 
+	clk		= ~clk; #2; 
 	
 end
 
