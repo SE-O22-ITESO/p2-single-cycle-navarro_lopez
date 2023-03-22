@@ -39,9 +39,9 @@ module Memory_Map_Decoder(
 // = Parameters            
 // ====================================================
 localparam ADDR_DATA_H_MAX		= 32'h 7FFF_FFFF;
-localparam ADDR_DATA_H_MIN		= 32'h 1001_003C;
+localparam ADDR_DATA_H_MIN		= 32'h 1001_0040;
 
-localparam ADDR_UART_MAX		= 32'h 1001_003B;
+localparam ADDR_UART_MAX		= 32'h 1001_003F;
 localparam ADDR_UART_MIN		= 32'h 1001_002C;
 
 localparam ADDR_GPIO_MAX		= 32'h 1001_002B;
@@ -52,10 +52,6 @@ localparam ADDR_DATA_L_MIN		= 32'h 1001_0000;
 
 localparam ADDR_PROGRAM_MAX	= 32'h 0FFF_FFFF;
 localparam ADDR_PROGRAM_MIN	= 32'h 0040_0000;
-
-//localparam ADDR_RESERVED_MAX	= 32'h 003F_FFFF;
-//localparam ADDR_RESERVED_MIN	= 32'h 0000_0000;
-
 
 always @ (*) begin
 

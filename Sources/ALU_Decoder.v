@@ -59,7 +59,7 @@ always @ (ALUControl, Opcode, Funct3, Funct7) begin
 		18'b0_0010011_000_???????: ALUOp = ALU_ADD  ; // addi
 		//17'b0010011_100_???????: ALUOp = ALU_XOR  ; // xori
 		//17'b0010011_110_???????: ALUOp = ALU_OR   ; // ori
-		//17'b0010011_111_???????: ALUOp = ALU_AND  ; // andi
+		18'b0_0010011_111_???????: ALUOp = ALU_AND  ; // andi
 		18'b0_0010011_001_0000000: ALUOp = ALU_SLL  ; // slli
 		//17'b0010011_101_0000000: ALUOp = ALU_SRL  ; // srli
 		//17'b0010011_101_0100000: ALUOp = ALU_SRL  ; // srai
@@ -85,7 +85,7 @@ always @ (ALUControl, Opcode, Funct3, Funct7) begin
 		18'b0_0010111_???_???????: ALUOp = ALU_ADD  ; // auipc
 		
 		// R-Type Multiply extension
-		//17'b0110011_000_0000001: ALUOp = ALU_MUL  ; // mul
+		18'b0_0110011_000_0000001: ALUOp = ALU_MUL  ; // mul
 		//17'b0110011_100_0000001: ALUOp = ALU_DIV  ; // div
 
 		

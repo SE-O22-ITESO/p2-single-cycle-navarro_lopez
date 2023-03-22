@@ -19,6 +19,8 @@ wire UART_Tx;
 wire UART_Tx_Fw;
 wire UART_Rx_Fw;
 
+wire TxRx_Bridge;
+
 RISC_V_Multi_Cycle RISCV_UUT(
 
 	// GPIO Port
@@ -26,8 +28,10 @@ RISC_V_Multi_Cycle RISCV_UUT(
 	.GPIO_Out	(GPIO_Out),
 	
 	// UART Port
-	.UART_Tx	(UART_Tx),
-	.UART_Rx	(UART_Rx),
+	//.UART_Tx	(UART_Tx),
+	//.UART_Rx	(UART_Rx),
+	.UART_Tx	(TxRx_Bridge),
+	.UART_Rx	(TxRx_Bridge),
 	.UART_Tx_Fw	(UART_Tx_Fw),
 	.UART_Rx_Fw	(UART_Rx_Fw),
 	
@@ -48,8 +52,10 @@ end
 
 always begin
 	
-	
-	clk		= ~clk; #2; 
+	// Clock freq = 50 MHz, period = 20 ns
+	// then 10 ns high and 10 ns low, 20 ns total
+	clk		= ~clk; #10; 
+	//clk		= ~clk; #2; 
 	
 end
 
