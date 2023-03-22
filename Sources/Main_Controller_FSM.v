@@ -423,6 +423,7 @@ always @(state) begin
 			//IRWrite			= 1'b0;
 		
 			PCSrc				= 1'b0;	// ALUResult (OldPC+ImmExt)
+			ALUControl		= 1'b1;	// Set ALUControl
 			ALUSrcA			= 2'b01; // A = OldPC
 			ALUSrcB			= 2'b10; // B = ImmExt
 			//RegWrite			= 1'b0;
@@ -437,6 +438,7 @@ always @(state) begin
 			//IRWrite			= 1'b0;
 		
 			PCSrc				= 1'b0;	// ALUResult (OldPC+4)
+			ALUControl		= 1'b1;	// Set ALUControl
 			ALUSrcA			= 2'b01; // A = OldPC
 			ALUSrcB			= 2'b01;	// B = 4
 			//RegWrite			= 1'b0;

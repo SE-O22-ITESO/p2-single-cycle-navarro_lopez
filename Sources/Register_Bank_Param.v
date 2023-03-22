@@ -31,6 +31,9 @@ module Register_Bank_Param #(
 
 localparam ADDR_LENGTH		= $clog2(REGS_QTY);
 localparam OUTPUT_LENGTH 	= REGS_QTY*DATA_LENGTH;
+localparam SP_RST_VAL		=	32'h7fffeffc;
+localparam GP_RST_VAL		=	32'h10008000;
+
 
 //wire [OUTPUT_LENGTH-1:0]q_w;
 
@@ -38,9 +41,16 @@ genvar addr;
 generate
 	for(addr=0 ; addr<REGS_QTY ; addr=addr+1) begin:register
 		
-		Register_Param #(.LENGTH(DATA_LENGTH)) register (.d(d), .rst(rst), .clk(clk), .en(en[addr]), .q(q[(addr+1)*REGS_QTY-1:addr*REGS_QTY]));
-
+		
+		case(addr)
+			2: Register_Param #(.LENGTH(DATA_LENGTH), .RST_VAL(SP_RST_VAL)) register (.d(d), .rst(rst), .clk(clk), .en(en[addr]), .q(q[(addr+1)*REGS_QTY-1:addr*REGS_QTY]));
+			3: Register_Param #(.LENGTH(DATA_LENGTH), .RST_VAL(GP_RST_VAL)) register (.d(d), .rst(rst), .clk(clk), .en(en[addr]), .q(q[(addr+1)*REGS_QTY-1:addr*REGS_QTY]));
+			default: Register_Param #(.LENGTH(DATA_LENGTH)) register (.d(d), .rst(rst), .clk(clk), .en(en[addr]), .q(q[(addr+1)*REGS_QTY-1:addr*REGS_QTY]));
+			
+		endcase
+		
 	end
 endgenerate
+
 
 endmodule

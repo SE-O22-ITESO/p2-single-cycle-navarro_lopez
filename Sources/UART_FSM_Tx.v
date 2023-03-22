@@ -99,7 +99,8 @@ always @(tx_state) begin
 			tx_state_out	= IDLE;
 			tx_cntr_en		= 1'b0;
 			bit_tmr_en		= 1'b0;
-			tx_sent			= 1'b0;
+			//tx_sent			= 1'b0;
+			tx_sent			= 1'b1;
 			end
 			
 		START_BIT:
