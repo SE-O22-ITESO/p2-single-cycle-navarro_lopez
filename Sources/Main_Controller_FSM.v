@@ -109,9 +109,9 @@ always @(posedge rst, posedge clk) begin
 				end
 				
 			// ===== Execution / Completion =============================
-//			REG_EXEC: begin
-//				state <= GNR_WRTBCK;	// => General writeback
-//				end
+			REG_EXEC: begin
+				state <= GNR_WRTBCK;	// => General writeback
+				end
 				
 			IMM_EXEC: begin
 				state <= GNR_WRTBCK;	// => General writeback
@@ -429,8 +429,8 @@ always @(state) begin
 			
 			//ALUControl		= 1'b0;
 			//PCSrc				= 1'b0;
-			//ALUSrcA			= 2'b00;
-			//ALUSrcB			= 2'b00;
+			ALUSrcA			= 2'b00; // PCNext
+			ALUSrcB			= 2'b11;  //0
 			RegWrite			= 1'b1;	// Set RegWrite
 			end
 			
@@ -444,8 +444,8 @@ always @(state) begin
 			
 			//ALUControl		= 1'b0;
 			//PCSrc				= 1'b0;
-			//ALUSrcA			= 2'b00;
-			//ALUSrcB			= 2'b00;
+			ALUSrcA			= 2'b00; // PCNext
+			ALUSrcB			= 2'b11;  //0
 			RegWrite			= 1'b1;	// Set RegWrite
 			end
 			

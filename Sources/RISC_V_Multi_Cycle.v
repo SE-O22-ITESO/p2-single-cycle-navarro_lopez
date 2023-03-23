@@ -42,10 +42,14 @@ localparam DATA_LENGTH		= 32;
 localparam ADDR_PROGRAM_MIN	= 32'h 0040_0000;
 // Data memory parameters
 localparam DATA_FILE			= "..//Quartus_Project//Memory_Files//data.dat";
-localparam DATA_DEPTH		=	16; // 2 data
+localparam DATA_WIDTH		=	31;
+//localparam DATA_DEPTH		=	31'h 7FFF_FFFF; // Full range addresses up to stack
+//localparam DATA_DEPTH		=	16; // 2 data
 // Instruction memory parameters
-localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//jump-link-reg.dat";
-localparam INSTR_DEPTH		=	10;
+localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//factorial.dat";
+localparam INSTR_DEPTH		=	19;
+//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//jump-link-reg.dat";
+//localparam INSTR_DEPTH		=	10;
 //localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-char-send.dat";
 //localparam INSTR_DEPTH		=	18;
 //localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-setup.dat";
@@ -211,7 +215,9 @@ Memory_Map_Decoder Mem_Map_Decoder(
 // ====================================================
 single_port_ram #(
 	.DATA_WIDTH(DATA_LENGTH),
-	.DATA_DEPTH(DATA_DEPTH),
+	
+	.DATA_DEPTH(DATA_WIDTH),
+	//.DATA_DEPTH(DATA_DEPTH),
 	.DATA_PATH(DATA_FILE)
 	)
 	Data_Memory(
@@ -229,7 +235,7 @@ single_port_ram #(
 // ====================================================
 // = Instruction Memory          
 // ====================================================
-single_port_ram #(
+single_port_rom #(
 	.DATA_WIDTH(DATA_LENGTH),
 	.DATA_DEPTH(INSTR_DEPTH),
 	.DATA_PATH(INSTR_FILE)

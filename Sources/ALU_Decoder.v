@@ -20,16 +20,17 @@ module ALU_Decoder(
 // ====================================================
 // = Parameters            
 // ====================================================
-localparam ALU_ADD	= 4'd00;
-localparam ALU_SUB	= 4'd01;
-localparam ALU_XOR	= 4'd02;
-localparam ALU_OR		= 4'd03;
-localparam ALU_AND	= 4'd04;
-localparam ALU_SLL	= 4'd05;
-localparam ALU_SRL	= 4'd06;
-localparam ALU_MUL	= 4'd07;
-localparam ALU_DIV	= 4'd08;
-localparam ALU_NA		= 4'd15;
+localparam ALU_ADD	= 4'd00; // ALUResult = A + B
+localparam ALU_SUB	= 4'd01; // ALUResult = A - B
+localparam ALU_XOR	= 4'd02; // ALUResult = A ˆ B
+localparam ALU_OR		= 4'd03; // ALUResult = A | B
+localparam ALU_AND	= 4'd04; // ALUResult = A & B
+localparam ALU_SLL	= 4'd05; // ALUResult = A << B[5:0]
+localparam ALU_SRL	= 4'd06; // ALUResult = A >> B[5:0]
+localparam ALU_LST	= 4'd07; // ALUResult = (A < B)?1:0
+localparam ALU_MUL	= 4'd08; // ALUResult = (A * B) [31:0]
+localparam ALU_DIV 	= 4'd09; // ALUResult = A / B
+localparam ALU_NA		= 4'd15; // ALUResult = 0
 
 
 always @ (ALUControl, Opcode, Funct3, Funct7) begin
@@ -63,8 +64,8 @@ always @ (ALUControl, Opcode, Funct3, Funct7) begin
 		18'b0_0010011_001_0000000: ALUOp = ALU_SLL  ; // slli
 		//17'b0010011_101_0000000: ALUOp = ALU_SRL  ; // srli
 		//17'b0010011_101_0100000: ALUOp = ALU_SRL  ; // srai
-		//17'b0010011_010_???????: ALUOp = ALU_NA  ; // slti
-		//17'b0010011_011_???????: ALUOp = ALU_NA  ; // sltiu
+		18'b0_0010011_010_???????: ALUOp = ALU_LST  ; // slti
+		//17'b0010011_011_???????: ALUOp = ALU_LST  ; // sltiu
 		
 		// I-Type Load
 		18'b0_0000011_010_???????: ALUOp = ALU_ADD  ; // lw

@@ -36,8 +36,9 @@ localparam ALU_OR		= 4'd03; // ALUResult = A | B
 localparam ALU_AND	= 4'd04; // ALUResult = A & B
 localparam ALU_SLL	= 4'd05; // ALUResult = A << B[5:0]
 localparam ALU_SRL	= 4'd06; // ALUResult = A >> B[5:0]
-localparam ALU_MUL	= 4'd07; // ALUResult = (A * B) [31:0]
-localparam ALU_DIV 	= 4'd08; // ALUResult = A / B
+localparam ALU_LST	= 4'd07; // ALUResult = (A < B)?1:0
+localparam ALU_MUL	= 4'd08; // ALUResult = (A * B) [31:0]
+localparam ALU_DIV 	= 4'd09; // ALUResult = A / B
 localparam ALU_NA		= 4'd15; // ALUResult = 0
 
 localparam CMP_EQU	= 2'd0;	// Comp: A == B
@@ -76,6 +77,10 @@ always @ (A, B, ALUOp) begin
 					
 		ALU_SRL:	begin	// Shift right logical
 					ALUResult = A >> B[5:0];
+					end
+					
+		ALU_LST: begin // Set less than
+					ALUResult = (A < B)?32'b1:32'b0;
 					end
 					
 		ALU_MUL:	begin	// Multiplication

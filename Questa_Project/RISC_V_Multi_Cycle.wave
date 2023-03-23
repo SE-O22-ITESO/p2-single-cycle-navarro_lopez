@@ -1,0 +1,196 @@
+onerror {resume}
+quietly WaveActivateNextPane {} 0
+add wave -noupdate -color {Medium Spring Green} /RISC_V_Multi_Cycle_TB/clk
+add wave -noupdate -color RED /RISC_V_Multi_Cycle_TB/rst
+add wave -noupdate -radix hexadecimal /RISC_V_Multi_Cycle_TB/RISCV_UUT/pc_old
+add wave -noupdate /RISC_V_Multi_Cycle_TB/RISCV_UUT/Instr_Reg/q
+add wave -noupdate -radix unsigned /RISC_V_Multi_Cycle_TB/RISCV_UUT/Control_Unit/MC_FSM/state
+add wave -noupdate -expand -group Control_Unit -radix binary /RISC_V_Multi_Cycle_TB/RISCV_UUT/Control_Unit/MC_FSM/Opcode
+add wave -noupdate -expand -group Control_Unit -radix hexadecimal /RISC_V_Multi_Cycle_TB/RISCV_UUT/Control_Unit/MC_FSM/Funct7
+add wave -noupdate -expand -group Control_Unit -radix hexadecimal /RISC_V_Multi_Cycle_TB/RISCV_UUT/Control_Unit/MC_FSM/Funct3
+add wave -noupdate -expand -group Control_Unit -radix unsigned /RISC_V_Multi_Cycle_TB/RISCV_UUT/Control_Unit/MC_FSM/state
+add wave -noupdate -expand -group Control_Unit /RISC_V_Multi_Cycle_TB/RISCV_UUT/CU_PCWrite
+add wave -noupdate -expand -group Control_Unit /RISC_V_Multi_Cycle_TB/RISCV_UUT/CU_AddrSrc
+add wave -noupdate -expand -group Control_Unit /RISC_V_Multi_Cycle_TB/RISCV_UUT/CU_MemRead
+add wave -noupdate -expand -group Control_Unit /RISC_V_Multi_Cycle_TB/RISCV_UUT/CU_MemWrite
+add wave -noupdate -expand -group Control_Unit /RISC_V_Multi_Cycle_TB/RISCV_UUT/CU_WritebackSrc
+add wave -noupdate -expand -group Control_Unit /RISC_V_Multi_Cycle_TB/RISCV_UUT/CU_IRWrite
+add wave -noupdate -expand -group Control_Unit /RISC_V_Multi_Cycle_TB/RISCV_UUT/CU_PCSrc
+add wave -noupdate -expand -group Control_Unit -radix unsigned /RISC_V_Multi_Cycle_TB/RISCV_UUT/CU_ALUOp
+add wave -noupdate -expand -group Control_Unit /RISC_V_Multi_Cycle_TB/RISCV_UUT/Control_Unit/ALUControl
+add wave -noupdate -expand -group Control_Unit /RISC_V_Multi_Cycle_TB/RISCV_UUT/CU_ALUSrcA
+add wave -noupdate -expand -group Control_Unit /RISC_V_Multi_Cycle_TB/RISCV_UUT/CU_ALUSrcB
+add wave -noupdate -expand -group Control_Unit /RISC_V_Multi_Cycle_TB/RISCV_UUT/CU_RegWrite
+add wave -noupdate -expand -group Control_Unit /RISC_V_Multi_Cycle_TB/RISCV_UUT/CU_Comp
+add wave -noupdate -group PC -radix hexadecimal /RISC_V_Multi_Cycle_TB/RISCV_UUT/pc_next
+add wave -noupdate -group PC -radix hexadecimal /RISC_V_Multi_Cycle_TB/RISCV_UUT/pc_curr
+add wave -noupdate -group PC -radix hexadecimal /RISC_V_Multi_Cycle_TB/RISCV_UUT/pc_old
+add wave -noupdate -group OldPC_Reg /RISC_V_Multi_Cycle_TB/RISCV_UUT/OldPC_Reg/d
+add wave -noupdate -group OldPC_Reg /RISC_V_Multi_Cycle_TB/RISCV_UUT/OldPC_Reg/en
+add wave -noupdate -group OldPC_Reg /RISC_V_Multi_Cycle_TB/RISCV_UUT/OldPC_Reg/q
+add wave -noupdate -expand -group A_Reg /RISC_V_Multi_Cycle_TB/RISCV_UUT/A_Reg/d
+add wave -noupdate -expand -group A_Reg /RISC_V_Multi_Cycle_TB/RISCV_UUT/A_Reg/en
+add wave -noupdate -expand -group A_Reg /RISC_V_Multi_Cycle_TB/RISCV_UUT/A_Reg/q
+add wave -noupdate -group ALUSrcA_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALUSrcA_Mux/a
+add wave -noupdate -group ALUSrcA_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALUSrcA_Mux/b
+add wave -noupdate -group ALUSrcA_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALUSrcA_Mux/c
+add wave -noupdate -group ALUSrcA_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALUSrcA_Mux/d
+add wave -noupdate -group ALUSrcA_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALUSrcA_Mux/sel
+add wave -noupdate -group ALUSrcA_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALUSrcA_Mux/out
+add wave -noupdate -expand -group B_Reg /RISC_V_Multi_Cycle_TB/RISCV_UUT/B_Reg/d
+add wave -noupdate -expand -group B_Reg /RISC_V_Multi_Cycle_TB/RISCV_UUT/B_Reg/en
+add wave -noupdate -expand -group B_Reg /RISC_V_Multi_Cycle_TB/RISCV_UUT/B_Reg/q
+add wave -noupdate -group ALUSrcB_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALUSrcB_Mux/a
+add wave -noupdate -group ALUSrcB_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALUSrcB_Mux/b
+add wave -noupdate -group ALUSrcB_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALUSrcB_Mux/c
+add wave -noupdate -group ALUSrcB_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALUSrcB_Mux/d
+add wave -noupdate -group ALUSrcB_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALUSrcB_Mux/sel
+add wave -noupdate -group ALUSrcB_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALUSrcB_Mux/out
+add wave -noupdate -expand -group ALU -radix hexadecimal /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALU/A
+add wave -noupdate -expand -group ALU -radix hexadecimal /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALU/B
+add wave -noupdate -expand -group ALU -radix unsigned /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALU/ALUOp
+add wave -noupdate -expand -group ALU -radix hexadecimal /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALU/ALUResult
+add wave -noupdate -expand -group ALU -radix decimal /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALU/ALUResult
+add wave -noupdate -expand -group ALU -radix unsigned /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALU/Comp
+add wave -noupdate -group ALUOut_Reg /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALU_Reg/d
+add wave -noupdate -group ALUOut_Reg /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALU_Reg/en
+add wave -noupdate -group ALUOut_Reg /RISC_V_Multi_Cycle_TB/RISCV_UUT/ALU_Reg/q
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/MemRead
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/MemWrite
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/AddrIn
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/DataIn
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/DataOut
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/AddrOut
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/DataIn0
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/DataOut0
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/Select0
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/DataIn1
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/Select1
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/DataIn2
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/DataOut2
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/Select2
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/DataIn3
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/DataOut3
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/Select3
+add wave -noupdate -group MemoryMapDecoder /RISC_V_Multi_Cycle_TB/RISCV_UUT/Mem_Map_Decoder/Write3
+add wave -noupdate -group Instr_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Instr_Reg/d
+add wave -noupdate -group Instr_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Instr_Reg/en
+add wave -noupdate -group Instr_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Instr_Reg/q
+add wave -noupdate -group Instr_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Instr_Memory/data
+add wave -noupdate -group Instr_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Instr_Memory/addr
+add wave -noupdate -group Instr_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Instr_Memory/we
+add wave -noupdate -group Instr_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Instr_Memory/re
+add wave -noupdate -group Instr_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Instr_Memory/q
+add wave -noupdate -group Instr_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Instr_Memory/rom
+add wave -noupdate -group DataReg /RISC_V_Multi_Cycle_TB/RISCV_UUT/Data_Reg/d
+add wave -noupdate -group DataReg /RISC_V_Multi_Cycle_TB/RISCV_UUT/Data_Reg/en
+add wave -noupdate -group DataReg /RISC_V_Multi_Cycle_TB/RISCV_UUT/Data_Reg/q
+add wave -noupdate -group Data_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Data_Memory/data
+add wave -noupdate -group Data_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Data_Memory/addr
+add wave -noupdate -group Data_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Data_Memory/we
+add wave -noupdate -group Data_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Data_Memory/re
+add wave -noupdate -group Data_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Data_Memory/q
+add wave -noupdate -group Data_Memory /RISC_V_Multi_Cycle_TB/RISCV_UUT/Data_Memory/rom
+add wave -noupdate -group GPIO_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/GPIO_Port/Select
+add wave -noupdate -group GPIO_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/GPIO_Port/Address
+add wave -noupdate -group GPIO_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/GPIO_Port/DataIn
+add wave -noupdate -group GPIO_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/GPIO_Port/DataOut
+add wave -noupdate -group GPIO_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/GPIO_Port/GPIO_In
+add wave -noupdate -group GPIO_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/GPIO_Port/GPIO_Out
+add wave -noupdate -group ImmGen /RISC_V_Multi_Cycle_TB/RISCV_UUT/ImmGen/Instr
+add wave -noupdate -group ImmGen /RISC_V_Multi_Cycle_TB/RISCV_UUT/ImmGen/ImmExt
+add wave -noupdate -group ImmGen -radix decimal /RISC_V_Multi_Cycle_TB/RISCV_UUT/ImmGen/ImmExt
+add wave -noupdate -group WritebackSrc_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/WritebackSrc_Mux/a
+add wave -noupdate -group WritebackSrc_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/WritebackSrc_Mux/b
+add wave -noupdate -group WritebackSrc_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/WritebackSrc_Mux/c
+add wave -noupdate -group WritebackSrc_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/WritebackSrc_Mux/d
+add wave -noupdate -group WritebackSrc_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/WritebackSrc_Mux/sel
+add wave -noupdate -group WritebackSrc_Mux /RISC_V_Multi_Cycle_TB/RISCV_UUT/WritebackSrc_Mux/out
+add wave -noupdate -group Reg_File /RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/a1
+add wave -noupdate -group Reg_File /RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/a2
+add wave -noupdate -group Reg_File /RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/a3
+add wave -noupdate -group Reg_File /RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/wd3
+add wave -noupdate -group Reg_File /RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/we3
+add wave -noupdate -group Reg_File /RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/rd1
+add wave -noupdate -group Reg_File /RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/rd2
+add wave -noupdate -group Reg_File /RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/wc_w
+add wave -noupdate -group Reg_File /RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/q_W
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[0]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[1]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[2]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[3]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[4]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[5]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[6]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[7]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[8]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[9]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[10]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[11]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[12]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[13]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[14]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[15]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[16]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[17]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[18]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[19]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[20]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[21]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[22]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[23]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[24]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[25]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[26]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[27]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[28]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[29]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[30]/genblk1/register/q}
+add wave -noupdate -group Reg_Bank {/RISC_V_Multi_Cycle_TB/RISCV_UUT/Reg_File/register_bank/register[31]/genblk1/register/q}
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Address
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/DataIn
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/DataOut
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Select
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Write
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/tx
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/rx
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Byte_Rate_Reg
+add wave -noupdate -group UART_Port -radix hexadecimal /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Tx_Data_Reg
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Rx_Data_Reg
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Flags_Reg
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Setup_Reg
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Tx_Sent_w
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Tx_Send_w
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Rx_Flag_w
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Rx_Flag_Clr_w
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Rx_Parity_w
+add wave -noupdate -group UART_Port /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/Rx_Data_w
+add wave -noupdate -group UART_Tx /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/UART_Tx_Module/tx_send
+add wave -noupdate -group UART_Tx /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/UART_Tx_Module/tx_data
+add wave -noupdate -group UART_Tx /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/UART_Tx_Module/byte_rate
+add wave -noupdate -group UART_Tx /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/UART_Tx_Module/tx
+add wave -noupdate -group UART_Tx /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/UART_Tx_Module/tx_sent
+add wave -noupdate -group UART_Rx /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/UART_Rx_Module/rx_flag_clr
+add wave -noupdate -group UART_Rx /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/UART_Rx_Module/rx
+add wave -noupdate -group UART_Rx /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/UART_Rx_Module/byte_rate
+add wave -noupdate -group UART_Rx /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/UART_Rx_Module/parity
+add wave -noupdate -group UART_Rx /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/UART_Rx_Module/rx_flag
+add wave -noupdate -group UART_Rx /RISC_V_Multi_Cycle_TB/RISCV_UUT/UART_Port/UART_Rx_Module/Rx_SR
+TreeUpdate [SetDefaultTree]
+WaveRestoreCursors {{Cursor 1} {204937506 ps} 0} {{Cursor 3} {498305 ps} 0}
+quietly wave cursor active 2
+configure wave -namecolwidth 450
+configure wave -valuecolwidth 88
+configure wave -justifyvalue left
+configure wave -signalnamewidth 0
+configure wave -snapdistance 10
+configure wave -datasetprefix 0
+configure wave -rowmargin 4
+configure wave -childrowmargin 2
+configure wave -gridoffset 0
+configure wave -gridperiod 1
+configure wave -griddelta 40
+configure wave -timeline 0
+configure wave -timelineunits ps
+update
+WaveRestoreZoom {442133 ps} {580480 ps}

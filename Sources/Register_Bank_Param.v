@@ -43,8 +43,9 @@ generate
 		
 		
 		case(addr)
-			2: Register_Param #(.LENGTH(DATA_LENGTH), .RST_VAL(SP_RST_VAL)) register (.d(d), .rst(rst), .clk(clk), .en(en[addr]), .q(q[(addr+1)*REGS_QTY-1:addr*REGS_QTY]));
-			3: Register_Param #(.LENGTH(DATA_LENGTH), .RST_VAL(GP_RST_VAL)) register (.d(d), .rst(rst), .clk(clk), .en(en[addr]), .q(q[(addr+1)*REGS_QTY-1:addr*REGS_QTY]));
+			0:       Register_Param #(.LENGTH(DATA_LENGTH)) register (.d(32'd0), .rst(rst), .clk(clk), .en(en[addr]), .q(q[(addr+1)*REGS_QTY-1:addr*REGS_QTY]));
+			2:       Register_Param #(.LENGTH(DATA_LENGTH), .RST_VAL(SP_RST_VAL)) register (.d(d), .rst(rst), .clk(clk), .en(en[addr]), .q(q[(addr+1)*REGS_QTY-1:addr*REGS_QTY]));
+			3:       Register_Param #(.LENGTH(DATA_LENGTH), .RST_VAL(GP_RST_VAL)) register (.d(d), .rst(rst), .clk(clk), .en(en[addr]), .q(q[(addr+1)*REGS_QTY-1:addr*REGS_QTY]));
 			default: Register_Param #(.LENGTH(DATA_LENGTH)) register (.d(d), .rst(rst), .clk(clk), .en(en[addr]), .q(q[(addr+1)*REGS_QTY-1:addr*REGS_QTY]));
 			
 		endcase

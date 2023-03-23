@@ -11,27 +11,27 @@ module single_port_ram #(
 // Declare the RAM array
 //reg [DATA_WIDTH-1:0] ram[2**ADDR_WIDTH-1:0];
 //reg [DATA_WIDTH-1:0] rom[2**ADDR_WIDTH-1:0];
-reg [DATA_WIDTH-1:0] rom[DATA_DEPTH-1:0];
+reg [DATA_WIDTH-1:0] ram[2**DATA_DEPTH-1:0];
 
-initial
-	begin
-		//$readmemh("hex_memory_file.mem", rom);
-		//$readmemh("Memory_Files//program.dat", rom);
-		$readmemh(DATA_PATH, rom);
-		//$readmemh("..//Sources//tex.dat", rom);
-		//$readmemb("..//Sources//bin_memory_file.mem", rom);
-	end
+//initial
+//	begin
+//		//$readmemh("hex_memory_file.mem", rom);
+//		//$readmemh("Memory_Files//program.dat", rom);
+//		$readmemh(DATA_PATH, rom);
+//		//$readmemh("..//Sources//tex.dat", rom);
+//		//$readmemb("..//Sources//bin_memory_file.mem", rom);
+//	end
 
 always @ (posedge clk)
 	begin
 		// Write
 		if (we)
 			//ram[addr] <= data;
-			rom[addr] <= data;
+			ram[addr] <= data;
 	end
 // Reading continuously
 //assign q = ram[addr];
 //assign q = rom[addr];
 
-assign q = re?rom[addr]:32'hDEAD_BEEF;
+assign q = re?ram[addr]:32'hDEAD_BEEF;
 endmodule
