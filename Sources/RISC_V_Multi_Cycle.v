@@ -46,7 +46,7 @@ localparam DATA_WIDTH		=	31;
 //localparam DATA_DEPTH		=	31'h 7FFF_FFFF; // Full range addresses up to stack
 //localparam DATA_DEPTH		=	16; // 2 data
 // Instruction memory parameters
-localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//factorial.dat";
+localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//factorial-n2.dat";
 localparam INSTR_DEPTH		=	19;
 //localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//jump-link-reg.dat";
 //localparam INSTR_DEPTH		=	10;
