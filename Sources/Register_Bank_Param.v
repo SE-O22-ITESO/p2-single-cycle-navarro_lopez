@@ -31,8 +31,9 @@ module Register_Bank_Param #(
 
 localparam ADDR_LENGTH		= $clog2(REGS_QTY);
 localparam OUTPUT_LENGTH 	= REGS_QTY*DATA_LENGTH;
-localparam SP_RST_VAL		=	32'h7fffeffc;
-localparam GP_RST_VAL		=	32'h10008000;
+//localparam SP_RST_VAL		=	32'h7fff_effc;
+localparam SP_RST_VAL		=	32'h1001_0140;
+localparam GP_RST_VAL		=	32'h1000_8000;
 
 
 //wire [OUTPUT_LENGTH-1:0]q_w;

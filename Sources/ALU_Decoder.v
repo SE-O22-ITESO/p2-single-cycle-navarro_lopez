@@ -51,7 +51,7 @@ always @ (ALUControl, Opcode, Funct3, Funct7) begin
 		//17'b0110011_110_0000000: ALUOp = ALU_OR   ; // or
 		//17'b0110011_111_0000000: ALUOp = ALU_AND  ; // and
 		//17'b0110011_001_0000000: ALUOp = ALU_SLL  ; // sll
-		//17'b0110011_101_0000000: ALUOp = ALU_SRL  ; // srl
+		18'b0_0110011_101_0000000: ALUOp = ALU_SRL  ; // srl
 		//17'b0110011_101_0100000: ALUOp = ALU_SRL  ; // sra
 		//17'b0110011_010_0000000: ALUOp = ALU_NA   ; // slt
 		//17'b0110011_011_0000000: ALUOp = ALU_NA   ; // sltu 
@@ -62,7 +62,7 @@ always @ (ALUControl, Opcode, Funct3, Funct7) begin
 		//17'b0010011_110_???????: ALUOp = ALU_OR   ; // ori
 		18'b0_0010011_111_???????: ALUOp = ALU_AND  ; // andi
 		18'b0_0010011_001_0000000: ALUOp = ALU_SLL  ; // slli
-		//17'b0010011_101_0000000: ALUOp = ALU_SRL  ; // srli
+		18'b0_0010011_101_0000000: ALUOp = ALU_SRL  ; // srli
 		//17'b0010011_101_0100000: ALUOp = ALU_SRL  ; // srai
 		18'b0_0010011_010_???????: ALUOp = ALU_LST  ; // slti
 		//17'b0010011_011_???????: ALUOp = ALU_LST  ; // sltiu

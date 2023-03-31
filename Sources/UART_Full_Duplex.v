@@ -9,7 +9,10 @@ module UART_Full_Duplex (
 	input clk,
 	input rst,
 	output tx,
-	input rx
+	input rx,
+	output [7:0] tx_data,
+	output [7:0] rx_data,
+	output [7:0] byte_rate
 );
 // ====================================================
 // = Parameters            
@@ -20,6 +23,15 @@ localparam TX_DATA_ADDR		= 3'h2;
 localparam FLAGS_ADDR		= 3'h1;
 localparam SETUP_ADDR		= 3'h0;
 
+localparam CLK_FREQ			= 32'd50_000_000;
+localparam BAUD_RATE			= 32'd9_600;
+localparam BYTE_RATE 		= CLK_FREQ/BAUD_RATE;
+
+localparam BYTE_RATE_DFT_VAL	= BYTE_RATE;
+//localparam BYTE_RATE_DFT_VAL	= 32'h1b2;
+localparam TX_DATA_DFT_VAL		= 8'h5a;
+localparam SETUP_DFT_VAL		= 32'h2;
+
 // Registers
 reg [31:0] Byte_Rate_Reg;
 reg [7:0] Tx_Data_Reg;
@@ -27,17 +39,31 @@ reg [7:0] Rx_Data_Reg;
 reg [31:0] Flags_Reg;
 reg [31:0] Setup_Reg;
 
+wire [7:0] Rx_Data_w;
+
+assign tx_data = Tx_Data_Reg;
+assign rx_data = Rx_Data_Reg;
+assign byte_rate = Byte_Rate_Reg[7:0];
 
 // Read and write event registers logic
-always @ (posedge rst, /*posedge clk,*/ posedge Select) begin
+//always @ (posedge rst, negedge clk/*, posedge Select*/) begin
+always @ (posedge rst, posedge clk/*, posedge Select*/) begin
+//wire clk_sel;
+//or(clk_sel,clk,Select);
+//
+//always @ (posedge rst, posedge clk_sel) begin
 
 	if(rst) begin
 		DataOut					<= 32'b0;
-		Byte_Rate_Reg 			<= 32'b0;
-		Tx_Data_Reg				<=  8'b0;
-		Rx_Data_Reg				<=  8'b0;
+		Byte_Rate_Reg 			<= BYTE_RATE_DFT_VAL;
+		Tx_Data_Reg				<= TX_DATA_DFT_VAL;
+		Setup_Reg				<= SETUP_DFT_VAL;
+		
+//		Byte_Rate_Reg 			<= 32'b0;
+//		Tx_Data_Reg				<= 8'b0;
+//		Setup_Reg				<= 32'b0;
+		//Rx_Data_Reg				<=  8'b0;
 		//Flags_Reg				<= 32'b0;
-		Setup_Reg				<= 32'b0;
 		
 	end
 	
@@ -47,18 +73,18 @@ always @ (posedge rst, /*posedge clk,*/ posedge Select) begin
 			
 			case(Address[2:0])
 				BYTE_RATE_ADDR: Byte_Rate_Reg <= DataIn;
-				//RX_DATA_ADDR:   Rx_Data_Reg	<= DataIn[7:0];
+				//RX_DATA_ADDR:   Rx_Data_Reg	<= Rx_Data_w;
 				TX_DATA_ADDR:	 Tx_Data_Reg	<= DataIn[7:0];
 				//FLAGS_ADDR:		 Flags_Reg		<= DataIn;
 				SETUP_ADDR:		 Setup_Reg		<= DataIn;
-				default: begin
-					DataOut					<= 32'b0;
-					Byte_Rate_Reg 			<= 32'b0;
-					Tx_Data_Reg				<=  8'b0;
-					Rx_Data_Reg				<=  8'b0;
-					//Flags_Reg				<= 32'b0;
-					Setup_Reg				<= 32'b0;
-				end
+//				default: begin
+//					DataOut					<= 32'b0;
+//					Byte_Rate_Reg 			<= 32'b0;
+//					Tx_Data_Reg				<=  8'b0;
+//					//Rx_Data_Reg				<=  8'b0;
+//					//Flags_Reg				<= 32'b0;
+//					Setup_Reg				<= 32'b0;
+//				end
 			endcase
 			
 		end else begin // Read
@@ -69,13 +95,13 @@ always @ (posedge rst, /*posedge clk,*/ posedge Select) begin
 				TX_DATA_ADDR:		DataOut <= Tx_Data_Reg[7:0];
 				FLAGS_ADDR:			DataOut <= Flags_Reg;
 				SETUP_ADDR:		 	DataOut <= Setup_Reg;
-				default: begin
-					DataOut					<= 32'b0;
-					Byte_Rate_Reg 			<= 32'b0;
-					Tx_Data_Reg				<=  8'b0;
-					Rx_Data_Reg				<=  8'b0;
-					Setup_Reg				<= 32'b0;
-				end
+//				default: begin
+//					DataOut					<= 32'b0;
+//					Byte_Rate_Reg 			<= 32'b0;
+//					Tx_Data_Reg				<=  8'b0;
+//					//Rx_Data_Reg				<=  8'b0;
+//					Setup_Reg				<= 32'b0;
+//				end
 			endcase
 		
 		end
@@ -84,12 +110,20 @@ always @ (posedge rst, /*posedge clk,*/ posedge Select) begin
 	end
 	
 	else begin
-		DataOut					<= 32'b0;
-		Byte_Rate_Reg 			<= 32'b0;
-		Tx_Data_Reg				<= 8'b0;
-		Rx_Data_Reg				<= 8'b0;
+	
+		DataOut					<= DataOut;
+		Byte_Rate_Reg 			<= Byte_Rate_Reg;
+		Tx_Data_Reg				<= Tx_Data_Reg;
+		//Rx_Data_Reg				<= 8'b0;
 		//Flags_Reg				<= 32'b0;
-		Setup_Reg				<= 32'b0;
+		Setup_Reg				<= Setup_Reg;
+	
+//		DataOut					<= 32'b0;
+//		Byte_Rate_Reg 			<= 32'b0;
+//		Tx_Data_Reg				<= 8'b0;
+//		//Rx_Data_Reg				<= 8'b0;
+//		//Flags_Reg				<= 32'b0;
+//		Setup_Reg				<= 32'b0;
 	end
 
 end
@@ -135,7 +169,7 @@ end
 // = UART Reception module           
 // ====================================================
 // Wiring
-wire [7:0] Rx_Data_w;
+//wire [7:0] Rx_Data_w;
 assign Rx_Parity_Err_w = (^{Rx_Data_Reg, Rx_Parity_w});
 
 UART_Rx UART_Rx_Module (
@@ -148,6 +182,15 @@ UART_Rx UART_Rx_Module (
 	.rx_flag			(Rx_Flag_w),
 	.Rx_SR			(Rx_Data_w)
 );
+
+
+always @ (rst, Rx_Data_w) begin
+	
+	if(rst)
+		Rx_Data_Reg = 8'b0;
+	else
+ 		Rx_Data_Reg = Rx_Data_w;
+end
 
 
 endmodule

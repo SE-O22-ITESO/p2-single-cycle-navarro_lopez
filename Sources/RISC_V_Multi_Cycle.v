@@ -19,10 +19,13 @@ module RISC_V_Multi_Cycle(
 	output [9:0] GPIO_Out,
 	// UART
 	output UART_Tx,
-	input UART_Rx, 
+	input UART_Rx,
 	output UART_Tx_Fw,
-	output UART_Rx_Fw
-	
+	output UART_Rx_Fw,
+	// Displays
+	output [13:0]Left_Disp,
+	output [13:0]Middle_Disp,
+	output [13:0]Right_Disp
 );
 
 // ====================================================
@@ -42,42 +45,42 @@ localparam DATA_LENGTH		= 32;
 localparam ADDR_PROGRAM_MIN	= 32'h 0040_0000;
 // Data memory parameters
 localparam DATA_FILE			= "..//Quartus_Project//Memory_Files//data.dat";
-localparam DATA_WIDTH		=	31;
+localparam DATA_WIDTH		=	7;
 //localparam DATA_DEPTH		=	31'h 7FFF_FFFF; // Full range addresses up to stack
 //localparam DATA_DEPTH		=	16; // 2 data
 // Instruction memory parameters
-localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//factorial-n2.dat";
-localparam INSTR_DEPTH		=	19;
-//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//jump-link-reg.dat";
-//localparam INSTR_DEPTH		=	10;
+//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//stack-pointer.dat";
+//localparam INSTR_DEPTH		=	22;
+localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-factorial.dat";
+localparam INSTR_DEPTH		=	50;
+//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-rx-2-gpio-out.dat";
+//localparam INSTR_DEPTH		=	17;
+//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//factorial-n4.dat";
+//localparam INSTR_DEPTH		=	19;
 //localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-char-send.dat";
-//localparam INSTR_DEPTH		=	18;
+//localparam INSTR_DEPTH		=	17;
 //localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-setup.dat";
 //localparam INSTR_DEPTH		=	13;
 //localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//gpio-copy-in2out.dat";
 //localparam INSTR_DEPTH		=	06;
-//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//lw-sw-example.dat";
-//localparam INSTR_DEPTH		=	03;
-//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//instr.dat";
-//localparam INSTR_DEPTH		=	13;
 
 // ====================================================
 // = PLL     
 // ====================================================
 // Wiring
 //wire clk;		// Low freq desing clock
-//wire clk_PLL;	// 1 MHz Clock from PLL
+////wire clk_PLL;	// 1 MHz Clock from PLL
 //
 //PLL_Intel_FPGA_0002 PLL(
 //	.refclk   (Ref_Clk),   //  refclk.clk
 //	.rst      (~rst),      //   reset.reset
-//	.outclk_0 (clk_PLL) // outclk0.clk
+//	.outclk_0 (clk) // outclk0.clk
 //	//.locked   (locked)    //  locked.export
 //	
 //);
 
 // ====================================================
-// = Heard beat
+// = Heard beat (System healt monitor)
 // ====================================================
 // Heard beat to monitor system functionality. 
 // Half second for a 50 MHz clock: 25'd25_000_000
@@ -90,6 +93,115 @@ Heard_Bit #(.Half_Period_Counts(25'd25_000_000) ) Heard_monitor (
 	.heard_bit_out		(GPIO_Out[8])
 );
 
+// ====================================================
+// = Displays Decoders (Registers healt monitor)        
+// ====================================================
+// Wiring
+wire [7:0] UART_Tx_Data_w;
+wire [7:0] UART_Rx_Data_w;
+wire [7:0] UART_Byte_Rate_w;
+wire [7:0] Left_Disp_w;
+wire [7:0] Middle_Disp_w;
+wire [7:0] Right_Disp_w;
+
+assign Left_Disp_w   = UART_Tx_Data_w;
+assign Middle_Disp_w = UART_Rx_Data_w;
+assign Right_Disp_w  = UART_Byte_Rate_w;
+
+//assign Left_Disp_w   = (GPIO_In[8] == 1'b0)? UART_Tx_Data_w : 8'h00;
+//assign Middle_Disp_w = (GPIO_In[8] == 1'b0)? UART_Rx_Data_w : GPIO_In[7:0];
+//assign Right_Disp_w  = (GPIO_In[8] == 1'b0)? UART_Byte_Rate_w : GPIO_Out[7:0];
+
+// Less significant nibble display (rigthmost) HEX4
+Decoder_Bin_hex_7seg LSN_Left_Disp(
+    .W				(Left_Disp_w[3]),
+	 .X				(Left_Disp_w[2]),
+	 .Y				(Left_Disp_w[1]),
+	 .Z				(Left_Disp_w[0]),
+	 .Seg_A			(Left_Disp[0]),
+    .Seg_B			(Left_Disp[1]),
+    .Seg_C			(Left_Disp[2]),
+    .Seg_D			(Left_Disp[3]),
+    .Seg_E			(Left_Disp[4]),
+    .Seg_F			(Left_Disp[5]),
+    .Seg_G			(Left_Disp[6])
+);
+// More significant nibble display (leftmost) HEX5
+Decoder_Bin_hex_7seg MSN_Left_Disp(
+    .W				(Left_Disp_w[7]),
+	 .X				(Left_Disp_w[6]),
+	 .Y				(Left_Disp_w[5]),
+	 .Z				(Left_Disp_w[4]),
+	 .Seg_A			(Left_Disp[7]),
+    .Seg_B			(Left_Disp[8]),
+    .Seg_C			(Left_Disp[9]),
+    .Seg_D			(Left_Disp[10]),
+    .Seg_E			(Left_Disp[11]),
+    .Seg_F			(Left_Disp[12]),
+    .Seg_G			(Left_Disp[13])
+);
+
+// Less significant nibble display (rigthmost) HEX2
+Decoder_Bin_hex_7seg LSN_Middle_Disp(
+    .W				(Middle_Disp_w[3]),
+	 .X				(Middle_Disp_w[2]),
+	 .Y				(Middle_Disp_w[1]),
+	 .Z				(Middle_Disp_w[0]),
+	 .Seg_A			(Middle_Disp[0]),
+    .Seg_B			(Middle_Disp[1]),
+    .Seg_C			(Middle_Disp[2]),
+    .Seg_D			(Middle_Disp[3]),
+    .Seg_E			(Middle_Disp[4]),
+    .Seg_F			(Middle_Disp[5]),
+    .Seg_G			(Middle_Disp[6])
+);
+// More significant nibble display (leftmost) HEX3
+Decoder_Bin_hex_7seg MSN_Middle_Disp(
+    .W				(Middle_Disp_w[7]),
+	 .X				(Middle_Disp_w[6]),
+	 .Y				(Middle_Disp_w[5]),
+	 .Z				(Middle_Disp_w[4]),
+	 .Seg_A			(Middle_Disp[7]),
+    .Seg_B			(Middle_Disp[8]),
+    .Seg_C			(Middle_Disp[9]),
+    .Seg_D			(Middle_Disp[10]),
+    .Seg_E			(Middle_Disp[11]),
+    .Seg_F			(Middle_Disp[12]),
+    .Seg_G			(Middle_Disp[13])
+);
+
+// Less significant nibble display (rigthmost) HEX0
+Decoder_Bin_hex_7seg LSN_Right_Disp(
+    .W				(Right_Disp_w[3]),
+	 .X				(Right_Disp_w[2]),
+	 .Y				(Right_Disp_w[1]),
+	 .Z				(Right_Disp_w[0]),
+	 .Seg_A			(Right_Disp[0]),
+    .Seg_B			(Right_Disp[1]),
+    .Seg_C			(Right_Disp[2]),
+    .Seg_D			(Right_Disp[3]),
+    .Seg_E			(Right_Disp[4]),
+    .Seg_F			(Right_Disp[5]),
+    .Seg_G			(Right_Disp[6])
+);
+// More significant nibble display (leftmost) HEX1
+Decoder_Bin_hex_7seg MSN_Right_Disp(
+    .W				(Right_Disp_w[7]),
+	 .X				(Right_Disp_w[6]),
+	 .Y				(Right_Disp_w[5]),
+	 .Z				(Right_Disp_w[4]),
+	 .Seg_A			(Right_Disp[7]),
+    .Seg_B			(Right_Disp[8]),
+    .Seg_C			(Right_Disp[9]),
+    .Seg_D			(Right_Disp[10]),
+    .Seg_E			(Right_Disp[11]),
+    .Seg_F			(Right_Disp[12]),
+    .Seg_G			(Right_Disp[13])
+);
+
+// ====================================================
+// = RISC-V Modules   
+// ====================================================
 // ====================================================
 // = Control Unit      
 // ====================================================
@@ -130,9 +242,6 @@ Control_Unit Control_Unit(
 	.rst				(~rst)
 );
 
-// ====================================================
-// = RISC-V Modules   
-// ====================================================
 // Wiring
 wire [DATA_LENGTH-1:0] pc_next;
 wire [DATA_LENGTH-1:0] pc_curr;
@@ -276,7 +385,10 @@ UART_Full_Duplex UART_Port(
 	.clk				(clk),
 	.rst				(~rst),
 	.tx				(UART_Tx),
-	.rx				(UART_Rx)
+	.rx				(UART_Rx),
+	.tx_data			(UART_Tx_Data_w),
+	.rx_data			(UART_Rx_Data_w),
+	.byte_rate		(UART_Byte_Rate_w)
 );
 
 // OldPC Register

@@ -22,3 +22,19 @@
 	<version>Version 21.1.1 Build 850 06/23/2022 SJ Lite Edition</version>
 </internal_error>
 
+<internal_error>
+	<executable>quartus_map.exe</executable>
+	<sub_system>MEM</sub_system>
+	<error>*** Fatal Error: Out of memory in module quartus_map.exe (43243 megabytes used)</error>
+	<date>Thu Mar 23 05:51:48 2023</date>
+	<version>Version 21.1.1 Build 850 06/23/2022 SJ Lite Edition</version>
+</internal_error>
+
+<internal_error>
+	<executable>quartus_map.exe</executable>
+	<sub_system>MEM</sub_system>
+	<error>*** Fatal Error: Out of memory in module quartus_map.exe (41351 megabytes used)</error>
+	<date>Thu Mar 23 17:40:51 2023</date>
+	<version>Version 21.1.1 Build 850 06/23/2022 SJ Lite Edition</version>
+</internal_error>
+
