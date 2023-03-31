@@ -25,7 +25,9 @@ module RISC_V_Multi_Cycle(
 	// Displays
 	output [13:0]Left_Disp,
 	output [13:0]Middle_Disp,
-	output [13:0]Right_Disp
+	output [13:0]Right_Disp,
+	// Signal Tap CLK
+	output clk_PLL
 );
 
 // ====================================================
@@ -69,15 +71,16 @@ localparam INSTR_DEPTH		=	50;
 // ====================================================
 // Wiring
 //wire clk;		// Low freq desing clock
-////wire clk_PLL;	// 1 MHz Clock from PLL
-//
-//PLL_Intel_FPGA_0002 PLL(
-//	.refclk   (Ref_Clk),   //  refclk.clk
-//	.rst      (~rst),      //   reset.reset
-//	.outclk_0 (clk) // outclk0.clk
-//	//.locked   (locked)    //  locked.export
-//	
-//);
+//wire clk_PLL;	// 1 MHz Clock from PLL
+
+PLL_Intel_FPGA Signal_Tap_PLL(
+	//.refclk   (Ref_Clk),   //  refclk.clk
+	.refclk   (clk),   //  refclk.clk
+	.rst      (~rst),      //   reset.reset
+	.outclk_0 (clk_PLL) // outclk0.clk
+	//.locked   (locked)    //  locked.export
+	
+);
 
 // ====================================================
 // = Heard beat (System healt monitor)
@@ -92,6 +95,9 @@ Heard_Bit #(.Half_Period_Counts(25'd25_000_000) ) Heard_monitor (
 	.enable				(1'b1),
 	.heard_bit_out		(GPIO_Out[8])
 );
+
+
+
 
 // ====================================================
 // = Displays Decoders (Registers healt monitor)        

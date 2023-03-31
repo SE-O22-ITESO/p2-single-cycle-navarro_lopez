@@ -31,8 +31,8 @@ localparam GPIO_OUT_ADDR	= 2'h0;
 reg [7:0] GPIO_REG_OUT;
 assign DataOut = {24'b0,GPIO_REG_OUT};
 
-//always @ (posedge rst, negedge clk/*, posedge Select*/) begin
-always @ (posedge rst, posedge clk/*, posedge Select*/) begin
+always @ (posedge rst, negedge clk/*, posedge Select*/) begin
+//always @ (posedge rst, posedge clk/*, posedge Select*/) begin
 
 //wire clk_sel;
 //or(clk_sel,clk,Select);

@@ -46,8 +46,8 @@ assign rx_data = Rx_Data_Reg;
 assign byte_rate = Byte_Rate_Reg[7:0];
 
 // Read and write event registers logic
-//always @ (posedge rst, negedge clk/*, posedge Select*/) begin
-always @ (posedge rst, posedge clk/*, posedge Select*/) begin
+always @ (posedge rst, negedge clk/*, posedge Select*/) begin
+//always @ (posedge rst, posedge clk/*, posedge Select*/) begin
 //wire clk_sel;
 //or(clk_sel,clk,Select);
 //
