@@ -4,11 +4,11 @@
 // Engineer: Angel Ramses Navarro Lopez
 // Module Description:
 //   This module describes the top desing RTL model to implement the micro-architecture
-//   for a 32bit Multicycle microprocessor to support executution for a RISC-V ISA
+//   for a 32bit Singlecycle microprocessor to support executution for a RISC-V ISA
 //   module RV32I Base Integer Instructions plus multiply instructions
-// Date: February 22, 2023
+// Date: April 4, 2023
 //////////////////////////////////////////////////////////////////////////////////
-module RISC_V_Multi_Cycle(
+module RISC_V_Single_Cycle(
 
 	// Inputs
 	input clk,
@@ -25,11 +25,11 @@ module RISC_V_Multi_Cycle(
 	// Displays
 	output [13:0]Left_Disp,
 	output [13:0]Middle_Disp,
-	output [13:0]Right_Disp,
+	output [13:0]Right_Disp
 	// Signal Tap CLK
-	output clk_PLL
-);
+	//output clk_PLL
 
+);
 // ====================================================
 // = Assignments            
 // ====================================================
@@ -48,23 +48,9 @@ localparam ADDR_PROGRAM_MIN	= 32'h 0040_0000;
 // Data memory parameters
 localparam DATA_FILE			= "..//Quartus_Project//Memory_Files//data.dat";
 localparam DATA_WIDTH		=	7;
-//localparam DATA_DEPTH		=	31'h 7FFF_FFFF; // Full range addresses up to stack
-//localparam DATA_DEPTH		=	16; // 2 data
 // Instruction memory parameters
-//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//stack-pointer.dat";
-//localparam INSTR_DEPTH		=	22;
 localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-factorial.dat";
 localparam INSTR_DEPTH		=	50;
-//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-rx-2-gpio-out.dat";
-//localparam INSTR_DEPTH		=	17;
-//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//factorial-n4.dat";
-//localparam INSTR_DEPTH		=	19;
-//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-char-send.dat";
-//localparam INSTR_DEPTH		=	17;
-//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-setup.dat";
-//localparam INSTR_DEPTH		=	13;
-//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//gpio-copy-in2out.dat";
-//localparam INSTR_DEPTH		=	06;
 
 // ====================================================
 // = PLL     
@@ -73,14 +59,14 @@ localparam INSTR_DEPTH		=	50;
 //wire clk;		// Low freq desing clock
 //wire clk_PLL;	// 1 MHz Clock from PLL
 
-PLL_Intel_FPGA Signal_Tap_PLL(
-	//.refclk   (Ref_Clk),   //  refclk.clk
-	.refclk   (clk),   //  refclk.clk
-	.rst      (~rst),      //   reset.reset
-	.outclk_0 (clk_PLL) // outclk0.clk
-	//.locked   (locked)    //  locked.export
-	
-);
+//PLL_Intel_FPGA Signal_Tap_PLL(
+//	//.refclk   (Ref_Clk),   //  refclk.clk
+//	.refclk   (clk),   //  refclk.clk
+//	.rst      (~rst),      //   reset.reset
+//	.outclk_0 (clk_PLL) // outclk0.clk
+//	//.locked   (locked)    //  locked.export
+//	
+//);
 
 // ====================================================
 // = Heard beat (System healt monitor)
@@ -95,8 +81,6 @@ Heard_Bit #(.Half_Period_Counts(25'd25_000_000) ) Heard_monitor (
 	.enable				(1'b1),
 	.heard_bit_out		(GPIO_Out[8])
 );
-
-
 
 
 // ====================================================
@@ -205,53 +189,49 @@ Decoder_Bin_hex_7seg MSN_Right_Disp(
     .Seg_G			(Right_Disp[13])
 );
 
+
 // ====================================================
 // = RISC-V Modules   
 // ====================================================
 // ====================================================
 // = Control Unit      
 // ====================================================
-wire CU_PCWrite;
-wire CU_AddrSrc;
+//wire CU_PCWrite;
+//wire CU_AddrSrc;
 wire CU_MemRead;
 wire CU_MemWrite;
-wire [1:0] CU_WritebackSrc;
+wire CU_WritebackSrc;
 wire CU_IRWrite;
-wire CU_PCSrc;
+wire [1:0] CU_PCSrc;
 wire [3:0] CU_ALUOp;
-wire [1:0] CU_ALUSrcA;
+//wire [1:0] CU_ALUSrcA;
 wire [1:0] CU_ALUSrcB;
 wire CU_RegWrite;
 wire [1:0] CU_Comp;
 wire [DATA_LENGTH-1:0] Instr;
 
 Control_Unit Control_Unit(
-	.PCWrite			(CU_PCWrite),
-	.AddrSrc			(CU_AddrSrc),	
 	.MemRead			(CU_MemRead),
 	.MemWrite		(CU_MemWrite),
+	.Comp				(CU_Comp),
+	.ALUOp			(CU_ALUOp),
+	.PCSrc			(CU_PCSrc),
+	.ALUSrcB			(CU_ALUSrcB),
+	.RegWrite		(CU_RegWrite),
 	.WritebackSrc	(CU_WritebackSrc),
-	.IRWrite			(CU_IRWrite),
 	
 	.Opcode			(Instr[06:00]),
 	.Funct7			(Instr[31:25]),
 	.Funct3			(Instr[14:12]),
-	
-	.PCSrc			(CU_PCSrc),
-	.ALUOp			(CU_ALUOp),
-	.ALUSrcA			(CU_ALUSrcA),
-	.ALUSrcB			(CU_ALUSrcB),
-	.RegWrite		(CU_RegWrite),
-	.Comp				(CU_Comp),
-		
+
 	.clk				(clk),
 	.rst				(~rst)
 );
 
 // Wiring
-wire [DATA_LENGTH-1:0] pc_next;
-wire [DATA_LENGTH-1:0] pc_curr;
-wire [DATA_LENGTH-1:0] pc_old;
+wire [DATA_LENGTH-1:0] PC_Next;
+wire [DATA_LENGTH-1:0] PC;
+
 wire [DATA_LENGTH-1:0] mem_addr;
 wire [DATA_LENGTH-1:0] mem_data;
 wire [DATA_LENGTH-1:0] data;
@@ -269,9 +249,13 @@ wire [DATA_LENGTH-1:0] MMD_data_out_3;
 wire MMD_select_3;
 wire MMD_write_3;
 
+wire [DATA_LENGTH-1:0] MemData;
+wire [DATA_LENGTH-1:0] ALUResult;
 wire [DATA_LENGTH-1:0] a_reg_w;
 wire [DATA_LENGTH-1:0] b_reg_w;
 wire [DATA_LENGTH-1:0] alu_out;
+wire [DATA_LENGTH-1:0] rd2;
+
 
 // PC Register
 Register_Param #(
@@ -279,58 +263,56 @@ Register_Param #(
 	.RST_VAL (ADDR_PROGRAM_MIN)
 	)
 	PC_Reg(
-	.d			(pc_next),
+	.d			(PC_Next),
 	.rst		(~rst),
 	.clk		(clk),
-	.en		(CU_PCWrite),
-	.q			(pc_curr)
+	.en		(1'b1),
+	.q			(PC)
 	
 );
-// Addr Multiplexer
-Mux_2_1_Param #(
-	.DATA_LENGTH (DATA_LENGTH)
-	)
-	Addr_Mux(
-	.a			(pc_curr), 		// 0: PC
-	.b			(alu_out), 		// 1: ALUOut
-	.sel		(CU_AddrSrc),
-	.out		(mem_addr)
-);
+
 // ====================================================
 // = Memory map decoder      
 // ====================================================
-Memory_Map_Decoder Mem_Map_Decoder(
-	// UP Interface
-	.MemRead		(CU_MemRead),		// Input data MemRead from uP Control Unit
-	.MemWrite	(CU_MemWrite),		// Input data MemWrite from uP Control Unit
-	.AddrIn		(mem_addr),			// Input data Addr from uP
-	.DataIn		(b_reg_w),			// Input data BReg from uP	
-	.DataOut		(mem_data),			// Output data Instr/Data to uP
+
+Memory_Map_Decoder_Singlecycle MMD (
+	// uP Interface
+	.MemRead 		(CU_MemRead),
+	.MemWrite		(CU_MemWrite),
+	.Addr0			(ALUResult),
+	.DataIn			(rd2),
+	.Data0			(MemData),
+	.Addr1			(PC),
+	.Data1			(Instr),
 	// Address out
-	.AddrOut		(MMD_address_out),	// Output address to selected device
-	// Data Memory interface	
-	.DataIn0		(MMD_data_in_0),	// Input data Q from Data memory
-	.DataOut0	(MMD_data_out_0),	// Ouput data to Data memory
-	.Select0		(MMD_select_0),	// Output chip select to Data memory 
-	// Instruction Memory interface
-	.DataIn1		(MMD_data_in_1),	// Input data Q from Instruction memory
-	.Select1		(MMD_select_1),	// Output chip select to Instruction memory 
-	// GPIO interface
-	.DataIn2		(MMD_data_in_2),	// Input data Q from GPIO
-	.DataOut2	(MMD_data_out_2),	// Ouput data to GPIO
-	.Select2		(MMD_select_2),		// Output chip select to GPIO
-	// UART interface
-	.DataIn3		(MMD_data_in_3),	// Input data from UART
-	.DataOut3	(MMD_data_out_3),	// Ouput data to UART
-	.Select3		(MMD_select_3),		// Output chip select to UART
-	.Write3		(MMD_write_3)		// Output write to UART
+	.AddrOut			(MMD_address_out),
+	// Device 0: Data Memory interface
+	.DataIn0			(MMD_data_in_0),
+	.DataOut0		(MMD_data_out_0),
+	.Select0			(MMD_select_0),
+	// Device 1: Instruction Memory interface
+	.DataIn1			(MMD_data_in_1),
+	.Select1			(MMD_select_1),
+	// Device 2: GPIO interface
+	.DataIn2			(MMD_data_in_2),
+	.DataOut2		(MMD_data_out_2),
+	.Select2			(MMD_select_2),
+	// Device 3: UART interface
+	.DataIn3			(MMD_data_in_3),
+	.DataOut3		(MMD_data_out_3),
+	.Select3			(MMD_select_3),
+	.Write3			(MMD_write_3),
+	
+	.clk				(clk)
+	
 );
+
+
 // ====================================================
 // = Data Memory          
 // ====================================================
 single_port_ram #(
 	.DATA_WIDTH(DATA_LENGTH),
-	
 	.DATA_DEPTH(DATA_WIDTH),
 	//.DATA_DEPTH(DATA_DEPTH),
 	.DATA_PATH(DATA_FILE)
@@ -358,10 +340,9 @@ single_port_rom #(
 	Instr_Memory(
 	.addr			(MMD_address_out),
 	.q				(MMD_data_in_1),
-	//.data	(MMD_data_out_1), Read-only memory
+	//.data		(), Read-only memory
 	.we			(1'b0),
-	.re			(MMD_select_1),
-	//.re			(CU_MemRead),
+	.re			(1'b1), // Read always
 	.clk			(clk)
 );
 
@@ -397,39 +378,6 @@ UART_Full_Duplex UART_Port(
 	.byte_rate		(UART_Byte_Rate_w)
 );
 
-// OldPC Register
-Register_Param #(
-	.LENGTH	(DATA_LENGTH)
-	)
-	OldPC_Reg(
-	.d			(pc_curr),
-	.rst		(~rst),
-	.clk		(clk),
-	.en		(CU_IRWrite),
-	.q			(pc_old)
-);
-// Instr Register
-Register_Param #(
-	.LENGTH	(DATA_LENGTH)
-	)
-	Instr_Reg(
-	.d			(mem_data),
-	.rst		(~rst),
-	.clk		(clk),
-	.en		(CU_IRWrite),
-	.q			(Instr)
-);
-// Data Register
-Register_Param #(
-	.LENGTH	(DATA_LENGTH)
-	)
-	Data_Reg(
-	.d			(mem_data),
-	.rst		(~rst),
-	.clk		(clk),
-	.en		(1'b1),
-	.q			(data)
-);
 
 // ====================================================
 // = Register File           
@@ -441,113 +389,67 @@ wire	[4:0] a3;
 wire	[DATA_LENGTH-1:0] wd3;
 wire we3;
 wire	[DATA_LENGTH-1:0] rd1;
-wire	[DATA_LENGTH-1:0] rd2;
+//wire	[DATA_LENGTH-1:0] rd2;
 wire	[DATA_LENGTH-1:0] a_w;
 wire	[DATA_LENGTH-1:0] b_w;
 
-assign a1	= Instr[19:15]; // RS1
-assign a2 	= Instr[24:20]; // RS2
-assign a3	= Instr[11:07]; // RD
+assign a1	= Instr[19:15]; // RS1 Address
+assign a2 	= Instr[24:20]; // RS2 Address
+assign a3	= Instr[11:07]; // RD  Address
 assign we3	= CU_RegWrite;
 
-// Writeback Multiplexer
-//Mux_2_1_Param #(
-//	.DATA_LENGTH (DATA_LENGTH)
-//	)
-//	WritebackSrc_Mux(
-//	.a		(data),			// 0: DataReg
-//	.b		(alu_out), 		// 1: ALUOut
-//	.sel	(CU_WritebackSrc),
-//	.out	(wd3)
-//);
-
-// Writeback Source Multiplexor
-Mux_4_1_Param #(
+Mux_2_1_Param #(
 	.DATA_LENGTH (DATA_LENGTH)
 	)
 	WritebackSrc_Mux(
-	.a		(data),		// 0: DataReg
-	.b		(alu_out), 	// 1: ALUOut
-	.c		(pc_next),	// 2: PC Next
-	.d		(32'd0), 	// 3: 0
+	.a		(MemData),		// 0: MemData
+	.b		(ALUResult), 	// 1: ALUResult
 	.sel	(CU_WritebackSrc),
 	.out	(wd3)
 );
 
 // Register File
 Register_File Reg_File(
-	.a1	(a1),
-	.a2	(a2),
-	.a3	(a3),
-	.wd3	(wd3),
-	.we3	(we3),
-	.clk	(clk),
+	.a1	(a1),		// RAddr1
+	.a2	(a2),		// RAddr2
+	.a3	(a3),		// WAddr
+	.wd3	(wd3),	// WData
+	.we3	(we3),	// WE
+	.clk	(clk),	//
 	.rst	(~rst),
-	.rd1	(rd1),
-	.rd2	(rd2)
+	.rd1	(rd1),	// RD1
+	.rd2	(rd2)		//	RD2
 	
 );
-// A Register
-Register_Param #(
-	.LENGTH	(DATA_LENGTH)
-	)
-	A_Reg(
-	.d			(rd1),
-	.rst		(~rst),
-	.clk		(clk),
-	.en		(1'b1),
-	.q			(a_reg_w)
-);
-// B Register
-Register_Param #(
-	.LENGTH	(DATA_LENGTH)
-	)
-	B_Reg(
-	.d			(rd2),
-	.rst		(~rst),
-	.clk		(clk),
-	.en		(1'b1),
-	.q			(b_reg_w)
-);
+
 
 
 // ====================================================
 // = ALU         
 // ====================================================
 // Wiring
-wire [DATA_LENGTH-1:0] src_a;
-wire [DATA_LENGTH-1:0] src_b;
-wire [DATA_LENGTH-1:0] alu_result;
-wire [DATA_LENGTH-1:0] imm_ext;
-// ALUSrcA Multiplexer
-Mux_4_1_Param #(
-	.DATA_LENGTH (DATA_LENGTH)
-	)
-	ALUSrcA_Mux(
-	.a		(pc_curr),	// 0: PC
-	.b		(pc_old), 	// 1: OldPC
-	.c		(a_reg_w),	// 2: A Reg
-	.d		(32'd0), 	// 3: 0
-	.sel	(CU_ALUSrcA),
-	.out	(src_a)
-);
+//wire [DATA_LENGTH-1:0] ALUsrc_a;
+wire [DATA_LENGTH-1:0] ALUsrc_b;
+//wire [DATA_LENGTH-1:0] ALUResult;
+wire [DATA_LENGTH-1:0] Imm_Ext;
+
 // ALUSrcB Multiplexer
 Mux_4_1_Param #(
 	.DATA_LENGTH (DATA_LENGTH)
 	)	
 	ALUSrcB_Mux(
-	.a		(b_reg_w),		// 00: B Reg
-	.b		(32'd4),			// 01: 4
-	.c		(imm_ext),		// 10: ImmExt
+	.a		(rd2),			// 00: RS2
+	.b		(Imm_Ext),		// 01: ImmExt
+	.c		(32'd4),			// 10: 4
 	.d		(32'd0),			// 11: 0
 	.sel	(CU_ALUSrcB),
-	.out	(src_b)
+	.out	(ALUsrc_b)
 );
 
 // Immediate Generator
-Immediate_Generator ImmGen(
+Immediate_Generator Imm_Gen(
 	.Instr	(Instr),
-	.ImmExt	(imm_ext)
+	.ImmExt	(Imm_Ext)
 );
 
 // ALU
@@ -556,35 +458,52 @@ ALU_RISCV_Param #(
 	.OUT_LENGTH		(DATA_LENGTH)
 	) 
 	ALU (
-	.A				(src_a),
-	.B				(src_b),
-	.ALUOp		(CU_ALUOp),
-	.ALUResult	(alu_result),
-	.Comp			(CU_Comp)
+	.A				(rd1),		// A Src
+	.B				(ALUsrc_b),	// B Src
+	.ALUOp		(CU_ALUOp),	// AluOp
+	.ALUResult	(ALUResult),// Result
+	.Comp			(CU_Comp)	// Comp flag
 );
 
-// ALU Register
-Register_Param #(
-	.LENGTH	(DATA_LENGTH)
-	)
-	ALU_Reg(
-	.d			(alu_result),
-	.rst		(~rst),
-	.clk		(clk),
-	.en		(1'b1),
-	.q			(alu_out)
-);
+
+// ====================================================
+// = PC Next         
+// ====================================================
 
 // PC Source Multiplexor
-Mux_2_1_Param #(
+Mux_4_1_Param #(
 	.DATA_LENGTH (DATA_LENGTH)
 	)
 	PCSrc_Mux(
-	.a		(alu_result),	// 0
-	.b		(alu_out), 		// 1
+	.a		(PC + 3'd4),		// 00: PC+4
+	.b		(PC + Imm_Ext), 	// 01: PC+Imm
+	.c		(rd1 + Imm_Ext),	// 10: RS1+Imm
+	.d		(32'd0),				// 11: 0 (None)
+	
 	.sel	(CU_PCSrc),
-	.out	(pc_next)
+	.out	(PC_Next)
 );
 
 
+
 endmodule
+
+// Exprerimental
+
+//// ALUSrcA Multiplexer
+//Mux_4_1_Param #(
+//	.DATA_LENGTH (DATA_LENGTH)
+//	)
+//	ALUSrcA_Mux(
+//	.a		(PC),			// 0: PC
+//	.b		(pc_old), 	// 1: OldPC
+//	.c		(a_reg_w),	// 2: A Reg
+//	.d		(32'd0), 	// 3: 0
+//	.sel	(CU_ALUSrcA),
+//	.out	(src_a)
+//);
+
+	//.PCWrite			(CU_PCWrite),
+	//.AddrSrc			(CU_AddrSrc),
+	//.IRWrite			(CU_IRWrite),	
+	//.ALUSrcA			(CU_ALUSrcA),
