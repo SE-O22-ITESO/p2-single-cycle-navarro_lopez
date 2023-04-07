@@ -3,49 +3,52 @@
 // Company: ITESO
 // Engineer: Angel Ramses Navarro Lopez
 // Module Description:
-//   This module describes a RTL model for Control Unit for 32-bit RISCV 
-// Date: March 9, 2023
+//   This module describes a RTL model for Control Unit for 32-bit RISCV Singlecycle
+// Date: April 3, 2023
 //////////////////////////////////////////////////////////////////////////////////
 module Control_Unit(
 	
-	// Main Controller Singlecycle
-	output MemRead,			//
-	output MemWrite,			//
-	input [1:0]Comp,				//
-	output [3:0] ALUOp,
-	output [1:0] PCSrc,		//
-	output [1:0]ALUSrcB,	//
-	output RegWrite,			//
-	output WritebackSrc,	// "MemtoReg"
+	// Main Controller FSM
+	output PCWrite,		//
+	output AddrSrc, 		//
+	output MemRead,		//
+	output MemWrite,		//
+	output [01:00] WritebackSrc,	//
+	output IRWrite,		//
+		
 	input [06:00] Opcode,
 	input [06:00] Funct7,
 	input [02:00] Funct3,
+	
+	output PCSrc,			//
+	output [3:0]ALUOp,	//
+	output [1:0]ALUSrcA,	//
+	output [1:0]ALUSrcB,	//
+	output RegWrite,		//
+	input [1:0] Comp,		//
 		
 	input	clk,
 	input	rst
 );
 
 wire ALUControl;
-// PCWrite
-//or();
-//and();
-Main_Controller_Singlecycle MC_Singlecycle(
+
+Main_Controller_FSM Controller_Singlecycle(
 	
-	//.PCWrite			(PCWrite),
-	//.AddrSrc			(AddrSrc),	
+	.PCWrite			(PCWrite),
+	.AddrSrc			(AddrSrc),	
 	.MemRead			(MemRead),
 	.MemWrite		(MemWrite),
 	.WritebackSrc	(WritebackSrc),
-	//.IRWrite			(IRWrite),
+	.IRWrite			(IRWrite),
 	
 	.Opcode			(Opcode),
 	.Funct7			(Funct7),
 	.Funct3			(Funct3),
 	
 	.PCSrc			(PCSrc),
-	.ALUOp		(ALUOp),
-	//.ALUControl		(ALUControl),
-	//.ALUSrcA			(ALUSrcA),
+	.ALUControl		(ALUControl),
+	.ALUSrcA			(ALUSrcA),
 	.ALUSrcB			(ALUSrcB),
 	.RegWrite		(RegWrite),
 	.Comp				(Comp),
@@ -54,15 +57,15 @@ Main_Controller_Singlecycle MC_Singlecycle(
 	.rst				(rst)
 );
 
-//ALU_Decoder ALU_Decoder(
-//	//.Funct		(Funct),
-//	//.ALUControl	(ALUControl)
-//	.ALUControl	(ALUControl),
-//	.Opcode		(Opcode),
-//	.Funct7		(Funct7),
-//	.Funct3		(Funct3),
-//	.ALUOp		(ALUOp)
-//	
-//);
+ALU_Decoder ALU_Decoder(
+	//.Funct		(Funct),
+	//.ALUControl	(ALUControl)
+	.ALUControl	(ALUControl),
+	.Opcode		(Opcode),
+	.Funct7		(Funct7),
+	.Funct3		(Funct3),
+	.ALUOp		(ALUOp)
+	
+);
 
 endmodule

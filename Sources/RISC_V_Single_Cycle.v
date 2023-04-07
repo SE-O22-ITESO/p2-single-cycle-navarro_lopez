@@ -49,8 +49,18 @@ localparam ADDR_PROGRAM_MIN	= 32'h 0040_0000;
 localparam DATA_FILE			= "..//Quartus_Project//Memory_Files//data.dat";
 localparam DATA_WIDTH		=	7;
 // Instruction memory parameters
-localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//uart-factorial.dat";
-localparam INSTR_DEPTH		=	50;
+//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//stack-pointer-lite.dat";
+//localparam INSTR_DEPTH		=	15;
+//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//stack-pointer.dat";
+//localparam INSTR_DEPTH		=	22;
+//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//jump-link-reg.dat";
+//localparam INSTR_DEPTH		=	10;
+localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//u-type.dat";
+localparam INSTR_DEPTH		=	9;
+//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//r-i-type.dat";
+//localparam INSTR_DEPTH		=	34;
+
+
 
 // ====================================================
 // = PLL     
@@ -200,7 +210,7 @@ Decoder_Bin_hex_7seg MSN_Right_Disp(
 //wire CU_AddrSrc;
 wire CU_MemRead;
 wire CU_MemWrite;
-wire CU_WritebackSrc;
+wire [2:0]CU_WritebackSrc;
 wire CU_IRWrite;
 wire [1:0] CU_PCSrc;
 wire [3:0] CU_ALUOp;
@@ -210,7 +220,7 @@ wire CU_RegWrite;
 wire [1:0] CU_Comp;
 wire [DATA_LENGTH-1:0] Instr;
 
-Control_Unit Control_Unit(
+Control_Unit_Singlecycle Control_Unit(
 	.MemRead			(CU_MemRead),
 	.MemWrite		(CU_MemWrite),
 	.Comp				(CU_Comp),
@@ -255,6 +265,10 @@ wire [DATA_LENGTH-1:0] a_reg_w;
 wire [DATA_LENGTH-1:0] b_reg_w;
 wire [DATA_LENGTH-1:0] alu_out;
 wire [DATA_LENGTH-1:0] rd2;
+wire [DATA_LENGTH-1:0] PC_4;
+wire [DATA_LENGTH-1:0] PC_Imm;
+wire [DATA_LENGTH-1:0] RS1_Imm;
+wire [DATA_LENGTH-1:0] Imm_Ext;
 
 
 // PC Register
@@ -398,12 +412,28 @@ assign a2 	= Instr[24:20]; // RS2 Address
 assign a3	= Instr[11:07]; // RD  Address
 assign we3	= CU_RegWrite;
 
-Mux_2_1_Param #(
+//Mux_2_1_Param #(
+//	.DATA_LENGTH (DATA_LENGTH)
+//	)
+//	WritebackSrc_Mux(
+//	.a		(MemData),		// 0: MemData
+//	.b		(ALUResult), 	// 1: ALUResult
+//	.sel	(CU_WritebackSrc),
+//	.out	(wd3)
+//);
+// Writeback source multiplexor
+Mux_8_1_Param #(
 	.DATA_LENGTH (DATA_LENGTH)
 	)
 	WritebackSrc_Mux(
 	.a		(MemData),		// 0: MemData
 	.b		(ALUResult), 	// 1: ALUResult
+	.c		(PC_4),			// 2: PC+4
+	.d		(Imm_Ext),		// 3: Imm
+	.e		(PC_Imm),		// 4: PC+Imm
+	.f		(32'b0),			// 5: 0
+	.g		(32'b0),			// 6: 0
+	.h		(32'b0),			// 7: 0
 	.sel	(CU_WritebackSrc),
 	.out	(wd3)
 );
@@ -431,7 +461,7 @@ Register_File Reg_File(
 //wire [DATA_LENGTH-1:0] ALUsrc_a;
 wire [DATA_LENGTH-1:0] ALUsrc_b;
 //wire [DATA_LENGTH-1:0] ALUResult;
-wire [DATA_LENGTH-1:0] Imm_Ext;
+//wire [DATA_LENGTH-1:0] Imm_Ext;
 
 // ALUSrcB Multiplexer
 Mux_4_1_Param #(
@@ -469,16 +499,19 @@ ALU_RISCV_Param #(
 // ====================================================
 // = PC Next         
 // ====================================================
+assign PC_4 = PC + 3'd4;
+assign PC_Imm = PC + Imm_Ext;
+assign RS1_Imm = rd1 + Imm_Ext;
 
 // PC Source Multiplexor
 Mux_4_1_Param #(
 	.DATA_LENGTH (DATA_LENGTH)
 	)
 	PCSrc_Mux(
-	.a		(PC + 3'd4),		// 00: PC+4
-	.b		(PC + Imm_Ext), 	// 01: PC+Imm
-	.c		(rd1 + Imm_Ext),	// 10: RS1+Imm
-	.d		(32'd0),				// 11: 0 (None)
+	.a		(PC_4),		// 00: PC+4
+	.b		(PC_Imm), 	// 01: PC+Imm
+	.c		(RS1_Imm),	// 10: RS1+Imm
+	.d		(PC),			// 11: PC
 	
 	.sel	(CU_PCSrc),
 	.out	(PC_Next)

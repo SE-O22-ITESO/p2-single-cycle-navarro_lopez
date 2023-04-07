@@ -98,8 +98,20 @@ always @ (*) begin
 	DataOut2 <= 32'b0;
 	DataOut3 <= 32'b0;
 	
+//	Select0	<=  Select0;
+//	Select1	<=  Select1;
+//	Select2	<=  Select2;
+//	Select3  <=  Select3;
+//	Write3   <=  Write3;
+//	AddrOut	<= AddrOut;
+//	Data0		<= Data0;
+//	Data1		<= Data1;
+//	DataOut0	<= DataOut0;
+//	DataOut2 <= DataOut2;
+//	DataOut3 <= DataOut3;
+	
 	// When clk is high instr fetch is executed
-	if(clk)begin
+	//if(clk)begin
 		
 		// Select 1: Program Memory
 		if(Addr1 >= ADDR_PROGRAM_MIN && Addr1 <= ADDR_PROGRAM_MAX) begin
@@ -109,10 +121,11 @@ always @ (*) begin
 		end
 			
 		
-	end
+	//end
 	
 	// When clk is low memory access is executed
-	else begin
+	//else begin
+	if(~clk)begin
 		
 		// Select 0: Data Memory (Stack)
 		if(Addr0 >= ADDR_STACK_MIN && Addr0 <= ADDR_STACK_MAX) begin
