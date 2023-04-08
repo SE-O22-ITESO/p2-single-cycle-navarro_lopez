@@ -21,7 +21,8 @@ module Memory_Map_Decoder_Singlecycle(
 	output reg [31:00] Data1,		// Output Instr to uP
 	
 	// Address out
-	output reg [31:00] AddrOut, 	// Output address to selected device
+	output reg [31:00] AddrOut0, 	// Output address to any other selected device
+	output reg [31:00] AddrOut1, 	// Output address to inst memory
 	
 	// Device 0: Data Memory interface	
 	input [31:00] DataIn0,			// Input data Q from Data memory
@@ -84,40 +85,30 @@ localparam BASE_STACK = RANG_DATA_H;
 localparam RANG_STACK = (ADDR_STACK_MAX - ADDR_STACK_MIN) + RANG_DATA_H;
 
 
-always @ (*) begin
+always @ (MemRead, MemWrite, Addr0, DataIn, Addr1, DataIn0, DataIn1, DataIn2, DataIn3, clk) begin
 
 	Select0	<=  1'b0;
 	Select1	<=  1'b0;
 	Select2	<=  1'b0;
 	Select3  <=  1'b0;
 	Write3   <=  1'b0;
-	AddrOut	<= 32'b0;
+	AddrOut0	<= 32'b0;
+	AddrOut1	<= 32'b0;
 	Data0		<= 32'b0;
 	Data1		<= 32'b0;
 	DataOut0	<= 32'b0;
 	DataOut2 <= 32'b0;
 	DataOut3 <= 32'b0;
 	
-//	Select0	<=  Select0;
-//	Select1	<=  Select1;
-//	Select2	<=  Select2;
-//	Select3  <=  Select3;
-//	Write3   <=  Write3;
-//	AddrOut	<= AddrOut;
-//	Data0		<= Data0;
-//	Data1		<= Data1;
-//	DataOut0	<= DataOut0;
-//	DataOut2 <= DataOut2;
-//	DataOut3 <= DataOut3;
 	
 	// When clk is high instr fetch is executed
 	//if(clk)begin
 		
 		// Select 1: Program Memory
 		if(Addr1 >= ADDR_PROGRAM_MIN && Addr1 <= ADDR_PROGRAM_MAX) begin
-			Select1 <= 1'b1;
-			AddrOut <= {Addr1 - ADDR_PROGRAM_MIN + BASE_PROGRAM}>>2;
-			Data1 <= DataIn1;
+			Select1	<= 1'b1;
+			AddrOut1	<= {Addr1 - ADDR_PROGRAM_MIN + BASE_PROGRAM}>>2;
+			Data1		<= DataIn1;
 		end
 			
 		
@@ -130,7 +121,7 @@ always @ (*) begin
 		// Select 0: Data Memory (Stack)
 		if(Addr0 >= ADDR_STACK_MIN && Addr0 <= ADDR_STACK_MAX) begin
 			Select0	<= (MemRead | MemWrite);
-			AddrOut	<= {Addr0 - ADDR_STACK_MIN + BASE_STACK}>>2;
+			AddrOut0	<= {Addr0 - ADDR_STACK_MIN + BASE_STACK}>>2;
 			Data0		<= DataIn0;
 			DataOut0	<= DataIn;
 		end
@@ -138,7 +129,7 @@ always @ (*) begin
 		// Select 0: Data Memory (High data memory)
 		else if(Addr0 >= ADDR_DATA_H_MIN && Addr0 <= ADDR_DATA_H_MAX) begin
 			Select0	<= (MemRead | MemWrite);
-			AddrOut 	<= {Addr0 - ADDR_DATA_H_MIN + BASE_DATA_H}>>2;
+			AddrOut0	<= {Addr0 - ADDR_DATA_H_MIN + BASE_DATA_H}>>2;
 			Data0 	<= DataIn0;
 			DataOut0 <= DataIn;
 			
@@ -147,7 +138,7 @@ always @ (*) begin
 		// Select 0: Data Memory (Low data memory)
 		else if(Addr0 >= ADDR_DATA_L_MIN && Addr0 <= ADDR_DATA_L_MAX) begin
 			Select0	<= (MemRead | MemWrite);
-			AddrOut 	<= {Addr0 - ADDR_DATA_L_MIN + BASE_DATA_L}>>2;
+			AddrOut0 	<= {Addr0 - ADDR_DATA_L_MIN + BASE_DATA_L}>>2;
 			Data0 	<= DataIn0;
 			DataOut0 <= DataIn;
 			
@@ -156,7 +147,7 @@ always @ (*) begin
 		// Select 2: GPIO
 		else if(Addr0 >= ADDR_GPIO_MIN && Addr0 <= ADDR_GPIO_MAX) begin
 			Select2	<= (MemRead | MemWrite);
-			AddrOut	<= {Addr0 - ADDR_GPIO_MIN + BASE_GPIO}>>2;
+			AddrOut0	<= {Addr0 - ADDR_GPIO_MIN + BASE_GPIO}>>2;
 			Data0		<= DataIn2;
 			DataOut2	<= DataIn;
 		end
@@ -165,7 +156,7 @@ always @ (*) begin
 		else if(Addr0 >= ADDR_UART_MIN && Addr0 <= ADDR_UART_MAX) begin
 			Select3	<= (MemRead | MemWrite);
 			Write3	<= MemWrite;
-			AddrOut	<= {Addr0 - ADDR_UART_MIN + BASE_UART}>>2;
+			AddrOut0	<= {Addr0 - ADDR_UART_MIN + BASE_UART}>>2;
 			Data0		<= DataIn3;
 			DataOut3	<= DataIn;
 		end

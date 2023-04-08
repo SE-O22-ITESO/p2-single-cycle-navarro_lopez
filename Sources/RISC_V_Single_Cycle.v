@@ -245,7 +245,8 @@ wire [DATA_LENGTH-1:0] PC;
 wire [DATA_LENGTH-1:0] mem_addr;
 wire [DATA_LENGTH-1:0] mem_data;
 wire [DATA_LENGTH-1:0] data;
-wire [DATA_LENGTH-1:0] MMD_address_out;
+wire [DATA_LENGTH-1:0] MMD_address_out0;
+wire [DATA_LENGTH-1:0] MMD_address_out1;
 wire [DATA_LENGTH-1:0] MMD_data_in_0;
 wire [DATA_LENGTH-1:0] MMD_data_out_0;
 wire MMD_select_0;
@@ -299,7 +300,8 @@ Memory_Map_Decoder_Singlecycle MMD (
 	.Addr1			(PC),
 	.Data1			(Instr),
 	// Address out
-	.AddrOut			(MMD_address_out),
+	.AddrOut0		(MMD_address_out0),
+	.AddrOut1		(MMD_address_out1),
 	// Device 0: Data Memory interface
 	.DataIn0			(MMD_data_in_0),
 	.DataOut0		(MMD_data_out_0),
@@ -336,7 +338,7 @@ single_port_ram #(
 	//.addr	(mem_addr),
 	//.we	(CU_MemWrite),
 	//.q		(mem_data)
-	.addr			(MMD_address_out),
+	.addr			(MMD_address_out0),
 	.q				(MMD_data_in_0),
 	.data			(MMD_data_out_0),
 	.we			(CU_MemWrite),
@@ -352,7 +354,7 @@ single_port_rom #(
 	.DATA_PATH(INSTR_FILE)
 	)
 	Instr_Memory(
-	.addr			(MMD_address_out),
+	.addr			(MMD_address_out1),
 	.q				(MMD_data_in_1),
 	//.data		(), Read-only memory
 	.we			(1'b0),
@@ -364,7 +366,7 @@ single_port_rom #(
 // = GPIO Port          
 // ====================================================
 GPIO_Port GPIO_Port(
-	.Address			(MMD_address_out),
+	.Address			(MMD_address_out0),
 	.DataIn			(MMD_data_out_2),
 	.DataOut			(MMD_data_in_2),
 	.Select			(MMD_select_2),
@@ -378,7 +380,7 @@ GPIO_Port GPIO_Port(
 // = UART Full Duplex Port        
 // ====================================================
 UART_Full_Duplex UART_Port(
-	.Address			(MMD_address_out),
+	.Address			(MMD_address_out0),
 	.DataIn			(MMD_data_out_3),
 	.DataOut			(MMD_data_in_3),
 	.Select			(MMD_select_3),
