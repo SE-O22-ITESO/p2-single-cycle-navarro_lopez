@@ -49,14 +49,16 @@ localparam ADDR_PROGRAM_MIN	= 32'h 0040_0000;
 localparam DATA_FILE			= "..//Quartus_Project//Memory_Files//data.dat";
 localparam DATA_WIDTH		=	7;
 // Instruction memory parameters
+localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//factorial-n4.dat";
+localparam INSTR_DEPTH		=	19;
 //localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//stack-pointer-lite.dat";
 //localparam INSTR_DEPTH		=	15;
 //localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//stack-pointer.dat";
 //localparam INSTR_DEPTH		=	22;
 //localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//jump-link-reg.dat";
 //localparam INSTR_DEPTH		=	10;
-localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//u-type.dat";
-localparam INSTR_DEPTH		=	9;
+//localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//u-type.dat";
+//localparam INSTR_DEPTH		=	9;
 //localparam INSTR_FILE		= "..//Quartus_Project//Memory_Files//r-i-type.dat";
 //localparam INSTR_DEPTH		=	34;
 

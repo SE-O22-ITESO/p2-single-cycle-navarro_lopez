@@ -97,6 +97,8 @@ always @ (Comp,Funct7,Funct3,Opcode) begin
 		{2'b??,7'h20,3'h5,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_SRL, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // sra  | rd = rs1 >> rs2 msb-extends
 		{2'b??,7'h00,3'h2,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_LST, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // slt  | rd = (rs1 < rs2)?1:0
 		{2'b??,7'h00,3'h3,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_LST, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // sltu | rd = (rs1 < rs2)?1:0 zero-extends
+		{2'b??,7'h01,3'h0,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_MUL, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // mul  | rd = (rs1 * rs2)[31:0]
+		{2'b??,7'h01,3'h4,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_DIV, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // div  | rd = rs1 / rs2
 		
 		// I-Type Logic-Arithmetic ======================= M M  A        P     A             R W    
 		//   _______  _______/ /__                         e e  L        C     L             e b
@@ -149,8 +151,8 @@ always @ (Comp,Funct7,Funct3,Opcode) begin
 		
 		
 		// Undefined Opcode ============================== 
-//		default:                             Outputs = {2'b0_0, ALU_NA , PC   , ALUB_0  , 1'b0,WbS_MemData}; // (undef) PC = PC
-		default:                             Outputs = {2'b0_0, ALU_NA , PC_4 , ALUB_0  , 1'b0,WbS_MemData}; // (undef) PC = PC
+		default:                             Outputs = {2'b0_0, ALU_NA , PC   , ALUB_0  , 1'b0,WbS_MemData}; // (undef) PC = PC
+		//default:                             Outputs = {2'b0_0, ALU_NA , PC_4 , ALUB_0  , 1'b0,WbS_MemData}; // (undef) PC = PC
 		 
 	endcase
 
