@@ -59,6 +59,10 @@ always begin
 	
 end
 
+always begin
+		#60; GPIO_In = GPIO_In + 4'hb; 
+end
+
 always
 	begin
 

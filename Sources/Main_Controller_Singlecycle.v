@@ -87,18 +87,18 @@ always @ (Comp,Funct7,Funct3,Opcode) begin
 		//  / ___/(_)___  ____ _/ /__                      m m  U        S     U             g S
 		//  \__ \/ / __ \/ __ `/ / _ \                     R W  O        r     S             W r
 		// ___/ / / / / / /_/ / /  __/                     d r  p        c     B             r c 
-		{2'b??,7'h00,3'h0,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_ADD, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // add  | rd = rs1 + rs2
-		{2'b??,7'h20,3'h0,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_SUB, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // sub  | rd = rs1 - rs2
-		{2'b??,7'h00,3'h4,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_XOR, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // xor  | rd = rs1 ˆ rs2
-		{2'b??,7'h00,3'h6,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_OR , PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // or   | rd = rs1 | rs2
-		{2'b??,7'h00,3'h7,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_AND, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // and  | rd = rs1 & rs2
-		{2'b??,7'h00,3'h1,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_SLL, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // sll  | rd = rs1 << rs2
+		//{2'b??,7'h00,3'h0,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_ADD, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // add  | rd = rs1 + rs2
+		//{2'b??,7'h20,3'h0,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_SUB, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // sub  | rd = rs1 - rs2
+		//{2'b??,7'h00,3'h4,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_XOR, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // xor  | rd = rs1 ˆ rs2
+		//{2'b??,7'h00,3'h6,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_OR , PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // or   | rd = rs1 | rs2
+		//{2'b??,7'h00,3'h7,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_AND, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // and  | rd = rs1 & rs2
+		//{2'b??,7'h00,3'h1,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_SLL, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // sll  | rd = rs1 << rs2
 		{2'b??,7'h00,3'h5,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_SRL, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // srl  | rd = rs1 >> rs2
-		{2'b??,7'h20,3'h5,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_SRL, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // sra  | rd = rs1 >> rs2 msb-extends
-		{2'b??,7'h00,3'h2,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_LST, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // slt  | rd = (rs1 < rs2)?1:0
-		{2'b??,7'h00,3'h3,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_LST, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // sltu | rd = (rs1 < rs2)?1:0 zero-extends
+		//{2'b??,7'h20,3'h5,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_SRL, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // sra  | rd = rs1 >> rs2 msb-extends
+		//{2'b??,7'h00,3'h2,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_LST, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // slt  | rd = (rs1 < rs2)?1:0
+		//{2'b??,7'h00,3'h3,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_LST, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // sltu | rd = (rs1 < rs2)?1:0 zero-extends
 		{2'b??,7'h01,3'h0,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_MUL, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // mul  | rd = (rs1 * rs2)[31:0]
-		{2'b??,7'h01,3'h4,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_DIV, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // div  | rd = rs1 / rs2
+		//{2'b??,7'h01,3'h4,OPCODE_R_TYPE_LA}: Outputs = {2'b0_0, ALU_DIV, PC_4 , ALUB_RS2, 1'b1,WbS_ALURes }; // div  | rd = rs1 / rs2
 		
 		// I-Type Logic-Arithmetic ======================= M M  A        P     A             R W    
 		//   _______  _______/ /__                         e e  L        C     L             e b
@@ -106,14 +106,14 @@ always @ (Comp,Funct7,Funct3,Opcode) begin
 		// / /__/ /_/ / /__/ /  __/                        R W  O        r     S             W r
 		// \___/\__, /\___/_/\___/                         d r  p        c     B             r c 
 		{2'b??,7'h??,3'h0,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_ADD, PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // addi | rd = rs1 + imm
-		{2'b??,7'h??,3'h4,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_XOR, PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // xori | rd = rs1 ˆ imm
-		{2'b??,7'h??,3'h6,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_OR , PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // ori  | rd = rs1 | imm
+		//{2'b??,7'h??,3'h4,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_XOR, PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // xori | rd = rs1 ˆ imm
+		//{2'b??,7'h??,3'h6,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_OR , PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // ori  | rd = rs1 | imm
 		{2'b??,7'h??,3'h7,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_AND, PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // andi | rd = rs1 & imm
-		{2'b??,7'h00,3'h1,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_SLL, PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // slli | rd = rs1 << imm[0:4]
+		//{2'b??,7'h00,3'h1,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_SLL, PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // slli | rd = rs1 << imm[0:4]
 		{2'b??,7'h00,3'h5,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_SRL, PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // srli | rd = rs1 >> imm[0:4]
-		{2'b??,7'h20,3'h5,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_SRL, PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // srai | rd = rs1 >> imm[0:4] msb-extends
+		//{2'b??,7'h20,3'h5,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_SRL, PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // srai | rd = rs1 >> imm[0:4] msb-extends
 		{2'b??,7'h??,3'h2,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_LST, PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // slti | rd = (rs1 < imm)?1:0
-		{2'b??,7'h??,3'h3,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_LST, PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // sltiu| rd = (rs1 < imm)?1:0 zero-extends
+		//{2'b??,7'h??,3'h3,OPCODE_I_TYPE_LA}: Outputs = {2'b0_0, ALU_LST, PC_4 , ALUB_Imm, 1'b1,WbS_ALURes }; // sltiu| rd = (rs1 < imm)?1:0 zero-extends
 				
 		// I-Type Jump and Link Register ================= M M  A        P     A             R W    
 		//     ____  _________ ______   _    __            e e  L        C     L             e b
@@ -129,15 +129,15 @@ always @ (Comp,Funct7,Funct3,Opcode) begin
 		{2'b??,7'h??,3'h2,OPCODE_S_TYPE_SW}: Outputs = {2'b0_1, ALU_ADD, PC_4 , ALUB_Imm, 1'b0,WbS_MemData}; // sw   | M[rs1+imm][0:31] = rs2[0:31]
 		
 		// B-Type Branch =================================
-		{CMP_EQU,7'h??,3'h0,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_Im, ALUB_0  , 1'b0,WbS_MemData}; // beq  | if(rs1 == rs2) PC += imm (Branch case)
-		{CMP_LST,7'h??,3'h0,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_4 , ALUB_0  , 1'b0,WbS_MemData}; // beq  | if(rs1 == rs2) PC += imm (Continue case)
-		{CMP_GRT,7'h??,3'h0,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_4 , ALUB_0  , 1'b0,WbS_MemData}; // beq  | if(rs1 == rs2) PC += imm (Continue case)
-		{CMP_NA ,7'h??,3'h0,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_4 , ALUB_0  , 1'b0,WbS_MemData}; // beq  | if(rs1 == rs2) PC += imm (Continue case)
+		{CMP_EQU,7'h??,3'h0,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_Im, ALUB_RS2, 1'b0,WbS_MemData}; // beq  | if(rs1 == rs2) PC += imm (Branch case)
+		{CMP_LST,7'h??,3'h0,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_4 , ALUB_RS2, 1'b0,WbS_MemData}; // beq  | if(rs1 == rs2) PC += imm (Continue case)
+		{CMP_GRT,7'h??,3'h0,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_4 , ALUB_RS2, 1'b0,WbS_MemData}; // beq  | if(rs1 == rs2) PC += imm (Continue case)
+		{CMP_NA ,7'h??,3'h0,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_4 , ALUB_RS2, 1'b0,WbS_MemData}; // beq  | if(rs1 == rs2) PC += imm (Continue case)
 		
-		{CMP_EQU,7'h??,3'h1,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_4 , ALUB_0  , 1'b0,WbS_MemData}; // bne  | if(rs1 != rs2) PC += imm (Continue case)
-		{CMP_LST,7'h??,3'h1,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_Im, ALUB_0  , 1'b0,WbS_MemData}; // bne  | if(rs1 != rs2) PC += imm (Branch case)
-		{CMP_GRT,7'h??,3'h1,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_Im, ALUB_0  , 1'b0,WbS_MemData}; // bne  | if(rs1 != rs2) PC += imm (Branch case)
-		{CMP_NA ,7'h??,3'h1,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_Im, ALUB_0  , 1'b0,WbS_MemData}; // bne  | if(rs1 != rs2) PC += imm (Branch case)
+		{CMP_EQU,7'h??,3'h1,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_4 , ALUB_RS2, 1'b0,WbS_MemData}; // bne  | if(rs1 != rs2) PC += imm (Continue case)
+		{CMP_LST,7'h??,3'h1,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_Im, ALUB_RS2, 1'b0,WbS_MemData}; // bne  | if(rs1 != rs2) PC += imm (Branch case)
+		{CMP_GRT,7'h??,3'h1,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_Im, ALUB_RS2, 1'b0,WbS_MemData}; // bne  | if(rs1 != rs2) PC += imm (Branch case)
+		{CMP_NA ,7'h??,3'h1,OPCODE_B_TYPE_BR}: Outputs={2'b0_0, ALU_NA , PC_Im, ALUB_RS2, 1'b0,WbS_MemData}; // bne  | if(rs1 != rs2) PC += imm (Branch case)
 		
 		// J-Type Jump and Link ==========================
 		{2'b??,7'h??,3'h?,OPCODE_J_TYPE_JL}: Outputs = {2'b0_0, ALU_NA , PC_Im, ALUB_0  , 1'b1,WbS_PC_4   }; // jal  | rd = PC+4; PC += imm
@@ -146,7 +146,7 @@ always @ (Comp,Funct7,Funct3,Opcode) begin
 		{2'b??,7'h??,3'h?,OPCODE_U_TYPE_LU}: Outputs = {2'b0_0, ALU_NA , PC_4 , ALUB_0  , 1'b1,WbS_Imm    }; // lui  | rd = imm << 12
 		
 		// U-Type Add Upper Imm to PC ====================
-		{2'b??,7'h??,3'h?,OPCODE_U_TYPE_AU}: Outputs = {2'b0_0, ALU_NA , PC_4 , ALUB_0  , 1'b1,WbS_PC_Imm }; // auipc| rd = PC + (imm << 12)
+		//{2'b??,7'h??,3'h?,OPCODE_U_TYPE_AU}: Outputs = {2'b0_0, ALU_NA , PC_4 , ALUB_0  , 1'b1,WbS_PC_Imm }; // auipc| rd = PC + (imm << 12)
 		
 		
 		

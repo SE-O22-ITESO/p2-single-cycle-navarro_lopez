@@ -116,7 +116,7 @@ always @ (MemRead, MemWrite, Addr0, DataIn, Addr1, DataIn0, DataIn1, DataIn2, Da
 	
 	// When clk is low memory access is executed
 	//else begin
-	if(~clk)begin
+	//if(~clk)begin
 		
 		// Select 0: Data Memory (Stack)
 		if(Addr0 >= ADDR_STACK_MIN && Addr0 <= ADDR_STACK_MAX) begin
@@ -161,7 +161,7 @@ always @ (MemRead, MemWrite, Addr0, DataIn, Addr1, DataIn0, DataIn1, DataIn2, Da
 			DataOut3	<= DataIn;
 		end
 		
-	end
+	//end
 	
 		
 	

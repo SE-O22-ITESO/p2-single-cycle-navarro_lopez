@@ -3,7 +3,8 @@ module UART_Full_Duplex (
 
 	input [31:0] Address,
 	input [31:0] DataIn,
-	output reg [31:0] DataOut,
+	//output reg [31:0] DataOut,
+	output [31:0] DataOut,
 	input Select,
 	input Write,
 	input clk,
@@ -45,16 +46,33 @@ assign tx_data = Tx_Data_Reg;
 assign rx_data = Rx_Data_Reg;
 assign byte_rate = Byte_Rate_Reg[7:0];
 
+reg [31:0] Output;
+
+always @ (Select, Address, Byte_Rate_Reg, Rx_Data_Reg, Tx_Data_Reg, Flags_Reg, Setup_Reg) begin
+
+	case(Address[2:0])
+		BYTE_RATE_ADDR:	Output <= Byte_Rate_Reg;
+		RX_DATA_ADDR:		Output <= Rx_Data_Reg[7:0];
+		TX_DATA_ADDR:		Output <= Tx_Data_Reg[7:0];
+		FLAGS_ADDR:			Output <= Flags_Reg;
+		SETUP_ADDR:		 	Output <= Setup_Reg;
+		default:				Output <= 32'b0;
+	endcase
+	
+end
+
+assign DataOut = Output;
+
 // Read and write event registers logic
-always @ (posedge rst, negedge clk/*, posedge Select*/) begin
-//always @ (posedge rst, posedge clk/*, posedge Select*/) begin
+//always @ (posedge rst, negedge clk/*, posedge Select*/) begin
+always @ (posedge rst, posedge clk/*, posedge Select*/) begin
 //wire clk_sel;
 //or(clk_sel,clk,Select);
 //
 //always @ (posedge rst, posedge clk_sel) begin
 
 	if(rst) begin
-		DataOut					<= 32'b0;
+		//DataOut					<= 32'b0;
 		Byte_Rate_Reg 			<= BYTE_RATE_DFT_VAL;
 		Tx_Data_Reg				<= TX_DATA_DFT_VAL;
 		Setup_Reg				<= SETUP_DFT_VAL;
@@ -67,10 +85,10 @@ always @ (posedge rst, negedge clk/*, posedge Select*/) begin
 		
 	end
 	
-	else if(Select) begin
+//	else if(Select) begin
 	
-		if(Write) begin // Write
-			
+//		if(Write) begin // Write
+	else if(Write) begin
 			case(Address[2:0])
 				BYTE_RATE_ADDR: Byte_Rate_Reg <= DataIn;
 				//RX_DATA_ADDR:   Rx_Data_Reg	<= Rx_Data_w;
@@ -87,31 +105,30 @@ always @ (posedge rst, negedge clk/*, posedge Select*/) begin
 //				end
 			endcase
 			
-		end else begin // Read
-		
-			case(Address[2:0])
-				BYTE_RATE_ADDR:	DataOut <= Byte_Rate_Reg;
-				RX_DATA_ADDR:		DataOut <= Rx_Data_Reg[7:0];
-				TX_DATA_ADDR:		DataOut <= Tx_Data_Reg[7:0];
-				FLAGS_ADDR:			DataOut <= Flags_Reg;
-				SETUP_ADDR:		 	DataOut <= Setup_Reg;
-//				default: begin
-//					DataOut					<= 32'b0;
-//					Byte_Rate_Reg 			<= 32'b0;
-//					Tx_Data_Reg				<=  8'b0;
-//					//Rx_Data_Reg				<=  8'b0;
-//					Setup_Reg				<= 32'b0;
-//				end
-			endcase
-		
-		end
+//		end else begin // Read
+//		
+//			case(Address[2:0])
+//				BYTE_RATE_ADDR:	DataOut <= Byte_Rate_Reg;
+//				RX_DATA_ADDR:		DataOut <= Rx_Data_Reg[7:0];
+//				TX_DATA_ADDR:		DataOut <= Tx_Data_Reg[7:0];
+//				FLAGS_ADDR:			DataOut <= Flags_Reg;
+//				SETUP_ADDR:		 	DataOut <= Setup_Reg;
+//				// Dont un-comment these default settings
+////				default: begin
+////					DataOut					<= 32'b0;
+////					Byte_Rate_Reg 			<= 32'b0;
+////					Tx_Data_Reg				<=  8'b0;
+////					//Rx_Data_Reg				<=  8'b0;
+////					Setup_Reg				<= 32'b0;
+////				end
+//			endcase
+//		
+//		end
 		
 			
-	end
+	end else begin
 	
-	else begin
-	
-		DataOut					<= DataOut;
+		//DataOut					<= DataOut;
 		Byte_Rate_Reg 			<= Byte_Rate_Reg;
 		Tx_Data_Reg				<= Tx_Data_Reg;
 		//Rx_Data_Reg				<= 8'b0;
