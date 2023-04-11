@@ -20,13 +20,15 @@ UART:
 	lui t0, 0x10010
 	addi t0, t0, 0x002C # t0 = 0x1001_002C (UART_Setup, "UART base address")
 		
-	# Set Byte Rate = 0x0000_1458, (9,600 baudrate)
-	# Set Byte Rate = 0x0000_01B2, (115,200 baudrate)
+	# Set Byte Rate
+	# 0x0000_1458, (9,600 baudrate)
+	# 0x0000_01B2, (115,200 baudrate)  <-----
 	
 	#lui t1, 0x1 # t1 = 0x1000
 	#addi t1, t1, 0x458 # t1 = t1 + 0x458
 	addi t1, zero, 0x1B2 	# t1 = 0x1B2
 	sw t1, 16(t0) 		# Byte_Rate (UART_Setup+16) =  t1
+	
 	
 	# Set Tx_Data_0 = 'A'
 	addi s0, zero, 'A' 	# s1 = 'A'
