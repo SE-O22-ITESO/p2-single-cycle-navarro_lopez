@@ -25,9 +25,9 @@ module RISC_V_Single_Cycle(
 	// Displays
 	output [13:0]Left_Disp,
 	output [13:0]Middle_Disp,
-	output [13:0]Right_Disp,
+	output [13:0]Right_Disp
 	// Signal Tap CLK
-	output clk_PLL
+	//output clk_PLL
 
 );
 // ====================================================
@@ -79,14 +79,14 @@ localparam INSTR_DEPTH		=	51;
 //wire clk;		// Low freq desing clock
 //wire clk_PLL;	// 1 MHz Clock from PLL
 
-PLL_Intel_FPGA Signal_Tap_PLL(
-	//.refclk   (Ref_Clk),   //  refclk.clk
-	.refclk   (clk),   //  refclk.clk
-	.rst      (~rst),      //   reset.reset
-	.outclk_0 (clk_PLL) // outclk0.clk
-	//.locked   (locked)    //  locked.export
-	
-);
+//PLL_Intel_FPGA Signal_Tap_PLL(
+//	//.refclk   (Ref_Clk),   //  refclk.clk
+//	.refclk   (clk),   //  refclk.clk
+//	.rst      (~rst),      //   reset.reset
+//	.outclk_0 (clk_PLL) // outclk0.clk
+//	//.locked   (locked)    //  locked.export
+//	
+//);
 
 // ====================================================
 // = Heard beat (System healt monitor)
